@@ -35,12 +35,8 @@
         "update": "Modifier",
         "sure_to_delete": "Confimez-vous la suppression?"
     },
-    "country": {
-        "table_title": "Liste des pays",
-        "add_country": "Ajouter un pays"
-    },
-    "company": {
-        "table_title": "Liste des entreprises",
-        "add_company": "Ajouter une entreprise"
+    "user": {
+        "table_title": "Liste des utilisateurs",
+        "add_user": "Ajouter un utilisateur"
     }
 }

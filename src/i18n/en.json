@@ -36,12 +36,8 @@
         "sure_to_delete": "Sure to delete?"
 
     },
-    "country": {
-        "table_title": "List of countries",
-        "add_country": "Add country"
-    },
-    "company": {
-        "table_title": "List of companies",
-        "add_company": "Add Company"
+    "user": {
+        "table_title": "List of users",
+        "add_user": "Add user"
     }
 }

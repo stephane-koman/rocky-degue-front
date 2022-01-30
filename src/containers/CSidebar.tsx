@@ -1,7 +1,6 @@
 import React from "react";
-import { Image, Layout } from "antd";
+import { Layout } from "antd";
 import { useLocation } from "react-router-dom";
-import Logo from "../assets/images/logo.png";
 
 // Menu config
 import { getMenu } from "./CMenu";

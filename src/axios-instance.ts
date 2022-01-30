@@ -7,8 +7,6 @@ const axiosApiInstance = axios.create({
     process.env.REACT_APP_API_URL || "https://degue-app-back.herokuapp.com/api",
 });
 
-console.log("process", process.env.REACT_APP_API_URL);
-
 // Request interceptor for API calls
 axiosApiInstance.interceptors.request.use(
   async config => {

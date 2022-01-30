@@ -5,6 +5,10 @@ export const login = (data: any) => {
   return axiosApiInstance.post("/auth/login", data);
 };
 
+export const search = (data: any) => {
+  return axiosApiInstance.get(`/user/search?${data}`);
+};
+
 export const logout = () => {
   const value = localStorage.getItem(JWT_TOKEN);
   const data = JSON.parse(value);
