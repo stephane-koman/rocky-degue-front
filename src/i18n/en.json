@@ -1,0 +1,46 @@
+{
+    "login":  {
+        "sign_in": "Sign in",
+        "title": "Administration Dashboard",
+        "password_required": "Password is required",
+        "email_required": "Email is required",
+        "logout_message": "Why so early!"
+    },
+    "required": {
+        "name": "Name is required",
+        "code": "Code is required"
+    },
+    "menu":  {
+        "dashboard": "Dashboard",
+        "settings": "Settings",
+        "users": "Users",
+        "roles": "Roles",
+        "permissions": "Permissions",
+        "country": "Country",
+        "company": "Company"
+    },
+    "common": {
+        "welcome": "Welcome",
+        "home": "Home",
+        "email": "Email",
+        "password": "Password",
+        "logout": "Logout",
+        "copyright": "All rights reserved",
+        "name": "Name",
+        "address": "Address",
+        "save": "Save",
+        "cancel": "Cancel",
+        "edit": "Edit",
+        "update": "Update",
+        "sure_to_delete": "Sure to delete?"
+
+    },
+    "country": {
+        "table_title": "List of countries",
+        "add_country": "Add country"
+    },
+    "company": {
+        "table_title": "List of companies",
+        "add_company": "Add Company"
+    }
+}

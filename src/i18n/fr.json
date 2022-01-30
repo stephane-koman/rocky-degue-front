@@ -1,0 +1,45 @@
+{
+    "login":  {
+        "sign_in": "Se connecter",
+        "title": "Espace d'administration",
+        "password_required": "Le mot de passe est obligatoire",
+        "email_required": "L'email est obligatoire",
+        "logout_message": "Vous nous quittez déjà!"
+    },
+    "required": {
+        "name": "Le nom est obligatoire",
+        "code": "Le code est obligatoire"
+    },
+    "menu":  {
+        "dashboard": "Tableau de bord",
+        "settings": "Paramètres",
+        "users": "Utilisateurs",
+        "roles": "Rôles",
+        "permissions": "Permissions",
+        "country": "Pays",
+        "company": "Entreprise"
+    },
+    "common": {
+        "welcome": "Bienvenue",
+        "home": "Accueil",
+        "email": "Email",
+        "password": "Mot de passe",
+        "logout": "Se deconnecter",
+        "copyright": "Tous drois réservés",
+        "name": "Nom",
+        "address": "Adresse",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "edit": "Modifier",
+        "update": "Modifier",
+        "sure_to_delete": "Confimez-vous la suppression?"
+    },
+    "country": {
+        "table_title": "Liste des pays",
+        "add_country": "Ajouter un pays"
+    },
+    "company": {
+        "table_title": "Liste des entreprises",
+        "add_company": "Ajouter une entreprise"
+    }
+}
