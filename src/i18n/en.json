@@ -4,7 +4,8 @@
         "title": "Administration Dashboard",
         "password_required": "Password is required",
         "email_required": "Email is required",
-        "logout_message": "Why so early!"
+        "logout_message": "Why so early!",
+        "auth_error": "Incorrect email or password"
     },
     "required": {
         "name": "Name is required",

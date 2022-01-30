@@ -1,14 +1,12 @@
 import React, { useState, useContext } from "react";
 import { Redirect, useHistory } from "react-router-dom";
-import { Layout, Form, Input, Button, Card, Image, List, message } from "antd";
+import { Layout, Form, Input, Button, Card, message } from "antd";
 import {
   UserOutlined,
   LockOutlined,
   SmileOutlined,
   LoginOutlined,
-  WarningOutlined,
 } from "@ant-design/icons";
-import Logo from "../../assets/images/logo-login.png";
 import { red } from "@ant-design/colors";
 import "./Login.scss";
 import { getIsLoggedIn } from "../../utils/authHelpers";
@@ -16,7 +14,6 @@ import { AuthContext } from "../../context/auth";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
 import { login } from "../../services/user.service";
-import { JWT_TOKEN } from "../../utils/constantHelpers";
 
 const config = ({ username }, t: TFunction) => {
   return {
@@ -34,7 +31,7 @@ const Login = () => {
   const { t } = useTranslation();
   const context = useContext(AuthContext);
   const [form] = Form.useForm();
-  const [errors, setErrors] = useState<any>({});
+  const [error, setError] = useState<boolean>(false);
   const isAuthenticated = getIsLoggedIn();
   const history = useHistory();
 
@@ -48,6 +45,7 @@ const Login = () => {
       
     }).catch((err: any) => {
       console.log("err", err);
+      setError(err);
     })
   };
 
@@ -84,24 +82,9 @@ const Login = () => {
             }}
             headStyle={{ textAlign: "center", fontSize: "30px" }}
           >
-            {Object.keys(errors).length > 0 && (
-              <List
-                dataSource={Object.values(errors)}
-                renderItem={(item) => (
-                  <List.Item>
-                    <List.Item.Meta
-                      className="text-center"
-                      description={
-                        <span style={{ color: red.primary }}>
-                          <WarningOutlined style={{ marginRight: "16px" }} />
-                          {item}
-                        </span>
-                      }
-                    />
-                  </List.Item>
-                )}
-              />
-            )}
+            {
+              error && <div className="text-center" style={{color: red.primary}}>{t("login.auth_error")}</div>
+            }
             <Form
               form={form}
               style={{
@@ -128,7 +111,6 @@ const Login = () => {
                     message: t("login.email_required"),
                   },
                 ]}
-                extra={errors?.email}
               >
                 <Input
                   className="ant-input-login"
@@ -146,7 +128,6 @@ const Login = () => {
                     message: t("login.password_required"),
                   },
                 ]}
-                extra={errors?.password}
               >
                 <Input.Password
                   className="ant-input-login"

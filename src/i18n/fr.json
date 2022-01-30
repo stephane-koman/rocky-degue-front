@@ -1,10 +1,11 @@
 {
     "login":  {
-        "sign_in": "Se connecter",
-        "title": "Espace d'administration",
-        "password_required": "Le mot de passe est obligatoire",
-        "email_required": "L'email est obligatoire",
-        "logout_message": "Vous nous quittez déjà!"
+      "sign_in": "Se connecter",
+      "title": "Espace d'administration",
+      "password_required": "Le mot de passe est obligatoire",
+      "email_required": "L'email est obligatoire",
+      "logout_message": "Vous nous quittez déjà!",
+      "auth_error": "Email ou mot de passe incorrect"
     },
     "required": {
         "name": "Le nom est obligatoire",
