@@ -3,7 +3,7 @@ import { refreshAccessToken } from "./services/user.service";
 import { JWT_TOKEN } from "./utils/constantHelpers";
 
 const axiosApiInstance = axios.create({
-  baseURL: "https://degue-app-back.herokuapp.com/api",
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
 // Request interceptor for API calls
