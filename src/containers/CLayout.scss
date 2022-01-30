@@ -1,10 +1,10 @@
 .CLayout {
   .ant-breadcrumb a:hover {
-    color: #005bea;
+    color: #56317a;
   }
 
   .ant-input.ant-input-login:focus {
-    border-color: #005bea;
+    border-color: #56317a;
     outline: 0;
     -webkit-box-shadow: 0 0 0 2px rgba(230, 158, 24, 0.2);
     box-shadow: 0 0 0 2px rgba(230, 158, 24, 0.2);
@@ -12,22 +12,22 @@
 
   .ant-btn-dashed.ant-btn-login {
     color: #fff;
-    background: #005bea;
-    border-color: #005bea;
+    background: #56317a;
+    border-color: #56317a;
     border-style: dashed;
   }
 
   .ant-btn.ant-btn-login:hover,
   .ant-btn.ant-btn-login:focus {
-    color: #005bea;
-    border-color: #005bea;
+    color: #56317a;
+    border-color: #56317a;
   }
 
   .ant-layout-sider,
   .ant-menu.ant-menu-dark,
   .ant-menu-dark .ant-menu-sub,
   .ant-menu.ant-menu-dark .ant-menu-sub {
-    background: #005bea;
+    background: #56317a;
   }
 
   .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open,
@@ -37,11 +37,11 @@
 
   .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal)
     .ant-menu-item-selected {
-    background-color: #5e96ed !important;
+    background-color: #8a68ab !important;
   }
 
   .ant-layout-sider-trigger {
-    background: #053581;
+    background: #3a165c;
   }
 
   .ant-menu-dark .ant-menu-item-selected .ant-menu-item-icon + span,
@@ -79,16 +79,16 @@
 
   .logo {
     text-align: center;
-    color: #005bea;
+    color: #56317a;
     font-weight: 700;
     padding: 1rem;
     background: #FFF;
-    border: 2px solid #005bea;
+    border: 2px solid #56317a;
   }
 }
 
 .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
-  background-color: #5e96ed !important;
+  background-color: #8a68ab !important;
 }
 
 .ant-drawer-body {

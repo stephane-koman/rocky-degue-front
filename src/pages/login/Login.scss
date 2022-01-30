@@ -1,6 +1,7 @@
 .Login {
   .ant-layout {
-    background-image: linear-gradient(to top, #00c6fb 0%, #005bea 100%);
+    //background-image: linear-gradient(to top, #00c6fb 0%, #56317a 100%);
+    background-image: linear-gradient(to right, #3ab5b0 0%, #3d99be 31%, #56317a 100%);
   }
 
   .ant-card-head-title {
@@ -8,26 +9,27 @@
   }
   .ant-input-affix-wrapper:focus,
   .ant-input-affix-wrapper-focused {
-    border-color: #005bea;
+    border-color: #56317a;
     outline: 0;
     -webkit-box-shadow: 0 0 0 2px rgba(230, 158, 24, 0.2);
     box-shadow: 0 0 0 2px rgba(230, 158, 24, 0.2);
   }
 
   .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
-    border-color: #005bea;
+    border-color: #56317a;
     border-right-width: 1px !important;
     z-index: 1;
   }
 
   .ant-btn-primary {
-    background-image: linear-gradient(
-      to right,
-      #00c6fb 0%,
-      #005bea 51%,
-      #00c6fb 100%
-    );
+    background: #525994;
+    border-color: #56317a;
   }
+
+  .ant-btn-primary:hover {
+    background: #56317a;
+  }
+
   .ant-btn-primary {
     text-align: center;
     text-transform: uppercase;

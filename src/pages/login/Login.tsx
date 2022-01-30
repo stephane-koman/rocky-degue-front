@@ -35,6 +35,9 @@ const Login = () => {
   const isAuthenticated = getIsLoggedIn();
   const history = useHistory();
 
+  console.log("history", history);
+  
+
   const onFinish = (data: any) => {
     login(data).then((res: any) => {
       const userData: any = res?.data;

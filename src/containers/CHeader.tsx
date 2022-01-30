@@ -16,6 +16,7 @@ import { AuthContext } from "../context/auth";
 import CNavBar from "./CNavBar";
 import { Language } from "../enums/Language";
 import { TFunction } from "i18next";
+import { logout } from "../services/user.service";
 
 interface IProps {
   collapsed: boolean;
@@ -28,7 +29,7 @@ const config = (t: TFunction) => ({
 });
 
 const CHeader = ({ collapsed, onToggle }: IProps) => {
-  const {user, logout} = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
   const history = useHistory();
   const { t, i18n } = useTranslation();
   const [lang, setLang] = useState<Language>(i18n.language as Language);
@@ -36,9 +37,11 @@ const CHeader = ({ collapsed, onToggle }: IProps) => {
 
   const handleMenuClick = (e: any) => {
     if (e?.key === "logout") {
-      logout();
-      message.error(config(t));
-      history.replace("/login");
+      logout().then((_: any) => {
+        authContext.logout();
+        message.error(config(t));
+        history.replace("/login");
+      })
     }
   };
 
@@ -105,7 +108,9 @@ const CHeader = ({ collapsed, onToggle }: IProps) => {
             >
               <Typography.Text type="secondary">
                 {t("common.welcome")},{" "}
-                <span className="text-capitalize">{user?.username}</span>
+                <span className="text-capitalize">
+                  {authContext?.user?.username}
+                </span>
               </Typography.Text>
             </Dropdown.Button>
           </Col>

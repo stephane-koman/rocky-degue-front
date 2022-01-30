@@ -39,7 +39,7 @@ const AuthProvider = ({children}: any) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   function login(userData: any) {
-    localStorage.setItem(JWT_TOKEN, userData.token);
+    localStorage.setItem(JWT_TOKEN, JSON.stringify(userData.token));
     dispatch({
       type: "LOGIN",
       payload: userData,
