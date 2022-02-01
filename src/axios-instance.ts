@@ -39,6 +39,16 @@ axiosApiInstance.interceptors.response.use(
     const originalRequest = error?.config;
 
     if (
+      (error?.response?.status === 400 &&
+        error?.response?.data?.code === "TOKEN_BLACKLISTED") ||
+      (error?.response?.status === 403 &&
+        error?.response?.data?.code === "TOKEN_INVALID")
+    ) {
+      localStorage.clear();
+      window.location.replace("/login?session=expired");
+    }
+
+    if (
       error?.response?.status === 401 &&
       error?.response?.data?.code === "TOKEN_EXPIRED" &&
       !originalRequest?._retry
@@ -47,10 +57,8 @@ axiosApiInstance.interceptors.response.use(
       const access_token = refreshAccessToken();
       axios.defaults.headers.common["Authorization"] = "Bearer " + access_token;
       return axiosApiInstance(originalRequest);
-    }else{
-      localStorage.clear();
-      window.location.replace("/login?session=expired");
     }
+    return Promise.reject(error);
   }
 );
 

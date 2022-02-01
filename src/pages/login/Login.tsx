@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Redirect, useHistory } from "react-router-dom";
-import { Layout, Form, Input, Button, Card, message } from "antd";
+import { Layout, Form, Input, Button, Card, message, Select } from "antd";
 import {
   UserOutlined,
   LockOutlined,
@@ -15,6 +15,8 @@ import { AuthContext } from "../../context/auth";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
 import { login } from "../../services/user.service";
+import { Language } from "../../enums/Language";
+import i18n from "../../i18n";
 
 const config = ({ username }, t: TFunction) => {
   return {
@@ -37,6 +39,7 @@ const configSession = (t: TFunction) => {
 
 const Login = () => {
   const { t } = useTranslation();
+  const [lang, setLang] = useState<Language>(i18n.language as Language);
   const context = useContext(AuthContext);
   const [form] = Form.useForm();
   const [error, setError] = useState<boolean>(false);
@@ -55,8 +58,26 @@ const Login = () => {
     }).catch((err: any) => {
       setError(err);
     }).finally(() => {
-      setLoading(true);
+      setLoading(false);
     })
+  };
+
+  const onChangeLanguage = (selectedValue: any) => {
+    const language = selectedValue;
+
+    switch (language) {
+      case Language.EN:
+        setLang(Language.EN);
+        i18n.changeLanguage(Language.EN);
+        localStorage.setItem("i18nextLng", Language.EN);
+        break;
+      case Language.FR:
+      default:
+        setLang(Language.FR);
+        i18n.changeLanguage(Language.FR);
+        localStorage.setItem("i18nextLng", Language.FR);
+        break;
+    }
   };
 
   useEffect(() => {
@@ -74,6 +95,15 @@ const Login = () => {
 
   return (
     <div className="Login">
+      <Select
+        defaultValue={lang}
+        style={{ width: 70, marginRight: "8px", marginTop: "8px", position: "absolute", right: 0, background: "#FFF" }}
+        bordered={false}
+        onChange={onChangeLanguage}
+      >
+        <Select.Option value={Language.FR}>FR</Select.Option>
+        <Select.Option value={Language.EN}>EN</Select.Option>
+      </Select>
       <Layout style={{ minHeight: "100vh" }}>
         <div
           style={{
@@ -88,7 +118,7 @@ const Login = () => {
               marginBottom: "15%",
               textAlign: "center",
               color: "#FFF",
-              fontSize: "2rem"
+              fontSize: "2rem",
             }}
           >
             ROCKY DEGUE
@@ -101,9 +131,11 @@ const Login = () => {
             }}
             headStyle={{ textAlign: "center", fontSize: "30px" }}
           >
-            {
-              error && <div className="text-center" style={{color: red.primary}}>{t("login.auth_error")}</div>
-            }
+            {error && (
+              <div className="text-center" style={{ color: red.primary }}>
+                {t("login.auth_error")}
+              </div>
+            )}
             <Form
               form={form}
               style={{
