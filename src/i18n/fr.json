@@ -21,19 +21,20 @@
         "company": "Entreprise"
     },
     "common": {
-        "welcome": "Bienvenue",
-        "home": "Accueil",
-        "email": "Email",
-        "password": "Mot de passe",
-        "logout": "Se deconnecter",
-        "copyright": "Tous drois réservés",
-        "name": "Nom",
-        "address": "Adresse",
-        "save": "Enregistrer",
-        "cancel": "Annuler",
-        "edit": "Modifier",
-        "update": "Modifier",
-        "sure_to_delete": "Confimez-vous la suppression?"
+      "welcome": "Bienvenue",
+      "home": "Accueil",
+      "email": "Email",
+      "password": "Mot de passe",
+      "logout": "Se deconnecter",
+      "copyright": "Tous drois réservés",
+      "name": "Nom",
+      "address": "Adresse",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "edit": "Modifier",
+      "update": "Modifier",
+      "sure_to_delete": "Confimez-vous la suppression?",
+      "session_expired": "Votre session a expirée"
     },
     "user": {
         "table_title": "Liste des utilisateurs",

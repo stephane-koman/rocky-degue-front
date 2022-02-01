@@ -9,7 +9,7 @@ const axiosApiInstance = axios.create({
 
 // Request interceptor for API calls
 axiosApiInstance.interceptors.request.use(
-  async config => {
+  async (config) => {
     if (!config?.url?.includes("/auth/login")) {
       const value = localStorage.getItem(JWT_TOKEN);
       const keys = JSON.parse(value);
@@ -25,22 +25,33 @@ axiosApiInstance.interceptors.request.use(
     }
     return config;
   },
-  error => {
-    Promise.reject(error)
-});
+  (error) => {
+    Promise.reject(error);
+  }
+);
 
 // Response interceptor for API calls
-axiosApiInstance.interceptors.response.use((response) => {
-  return response
-}, async function (error) {
-  const originalRequest = error?.config;
-  if (error?.response?.status === 403 && !originalRequest?._retry) {
-    originalRequest._retry = true;
-    const access_token = refreshAccessToken();            
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + access_token;
-    return axiosApiInstance(originalRequest);
+axiosApiInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async function (error) {
+    const originalRequest = error?.config;
+
+    if (
+      error?.response?.status === 401 &&
+      error?.response?.data?.code === "TOKEN_EXPIRED" &&
+      !originalRequest?._retry
+    ) {
+      originalRequest._retry = true;
+      const access_token = refreshAccessToken();
+      axios.defaults.headers.common["Authorization"] = "Bearer " + access_token;
+      return axiosApiInstance(originalRequest);
+    }else{
+      localStorage.clear();
+      window.location.replace("/login?session=expired");
+    }
   }
-  return Promise.reject(error);
-});
+);
 
 export default axiosApiInstance;

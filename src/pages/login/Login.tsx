@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Redirect, useHistory } from "react-router-dom";
 import { Layout, Form, Input, Button, Card, message } from "antd";
 import {
@@ -6,6 +6,7 @@ import {
   LockOutlined,
   SmileOutlined,
   LoginOutlined,
+  FrownOutlined,
 } from "@ant-design/icons";
 import { red } from "@ant-design/colors";
 import "./Login.scss";
@@ -27,6 +28,13 @@ const config = ({ username }, t: TFunction) => {
   };
 };
 
+const configSession = (t: TFunction) => {
+  return {
+    content: <span>{t("common.session_expired")}</span>,
+    icon: <FrownOutlined />,
+  };
+};
+
 const Login = () => {
   const { t } = useTranslation();
   const context = useContext(AuthContext);
@@ -35,13 +43,9 @@ const Login = () => {
   const isAuthenticated = getIsLoggedIn();
   const history = useHistory();
 
-  console.log("history", history);
-  
-
   const onFinish = (data: any) => {
     login(data).then((res: any) => {
       const userData: any = res?.data;
-      
       message.success(config(userData, t));
       context.login(userData);
       history.replace('/');
@@ -51,6 +55,15 @@ const Login = () => {
       setError(err);
     })
   };
+
+  useEffect(() => {
+    const expired = new URLSearchParams(history.location.search).get("session");
+    if(expired){
+      message.error(configSession(t)); 
+      history.replace('/login');
+    } 
+  }, []);
+  
 
   if (isAuthenticated) {
     return <Redirect to="/" />;
