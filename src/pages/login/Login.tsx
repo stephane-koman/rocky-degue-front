@@ -40,10 +40,12 @@ const Login = () => {
   const context = useContext(AuthContext);
   const [form] = Form.useForm();
   const [error, setError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const isAuthenticated = getIsLoggedIn();
   const history = useHistory();
 
   const onFinish = (data: any) => {
+    setLoading(true);
     login(data).then((res: any) => {
       const userData: any = res?.data;
       message.success(config(userData, t));
@@ -51,8 +53,9 @@ const Login = () => {
       history.replace('/');
       
     }).catch((err: any) => {
-      console.log("err", err);
       setError(err);
+    }).finally(() => {
+      setLoading(true);
     })
   };
 
@@ -159,7 +162,7 @@ const Login = () => {
                     type="primary"
                     htmlType="submit"
                     block
-                    //loading={loading}
+                    loading={loading}
                     icon={<LoginOutlined />}
                     disabled={
                       !form.isFieldsTouched(true) ||
