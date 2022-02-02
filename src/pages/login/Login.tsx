@@ -50,6 +50,7 @@ const Login = () => {
   const onFinish = (data: any) => {
     setLoading(true);
     login(data).then((res: any) => {
+
       const userData: any = res?.data;
       message.success(config(userData, t));
       context.login(userData);
@@ -81,16 +82,19 @@ const Login = () => {
   };
 
   useEffect(() => {
-    const expired = new URLSearchParams(history.location.search).get("session");
+    let expired = new URLSearchParams(history.location.search).get("session");
     if(expired){
       message.error(configSession(t)); 
       history.replace('/login');
     } 
-  }, []);
+    return () => {
+      expired = null;
+    }
+  }, [history, t]);
   
 
   if (isAuthenticated) {
-    return <Redirect to="/" />;
+    return <Redirect to={history?.location?.state?.from?.pathname || "/"} />;
   }
 
   return (
