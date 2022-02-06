@@ -33,8 +33,7 @@ const CHeader = ({ collapsed, onToggle }: IProps) => {
   const history = useHistory();
   const { t, i18n } = useTranslation();
   const [lang, setLang] = useState<Language>(i18n.language as Language);
-
-
+  
   const handleMenuClick = (e: any) => {
     if (e?.key === "logout") {
       logout().then((_: any) => {
@@ -109,7 +108,7 @@ const CHeader = ({ collapsed, onToggle }: IProps) => {
               <Typography.Text type="secondary">
                 {t("common.welcome")},{" "}
                 <span className="text-capitalize">
-                  {authContext?.user?.username}
+                  {authContext?.user?.name}
                 </span>
               </Typography.Text>
             </Dropdown.Button>

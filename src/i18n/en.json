@@ -1,43 +1,66 @@
 {
-    "login":  {
-        "sign_in": "Sign in",
-        "title": "Administration Dashboard",
-        "password_required": "Password is required",
-        "email_required": "Email is required",
-        "logout_message": "Why so early!",
-        "auth_error": "Incorrect email or password"
-    },
-    "required": {
-        "name": "Name is required",
-        "code": "Code is required"
-    },
-    "menu":  {
-        "dashboard": "Dashboard",
-        "settings": "Settings",
-        "users": "Users",
-        "roles": "Roles",
-        "permissions": "Permissions",
-        "country": "Country",
-        "company": "Company"
-    },
-    "common": {
-        "welcome": "Welcome",
-        "home": "Home",
-        "email": "Email",
-        "password": "Password",
-        "logout": "Logout",
-        "copyright": "All rights reserved",
-        "name": "Name",
-        "address": "Address",
-        "save": "Save",
-        "cancel": "Cancel",
-        "edit": "Edit",
-        "update": "Update",
-        "sure_to_delete": "Sure to delete?",
-        "session_expired": "Session expired"
-    },
-    "user": {
-        "table_title": "List of users",
-        "add_user": "Add user"
+  "login": {
+    "sign_in": "Sign in",
+    "title": "Administration Dashboard",
+    "password_required": "Password is required",
+    "email_required": "Email is required",
+    "logout_message": "Why so early!",
+    "auth_error": "Incorrect email or password"
+  },
+  "required": {
+    "name": "Name is required",
+    "email": "Email is required"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "users": "Users",
+    "roles": "Roles",
+    "permissions": "Permissions",
+    "country": "Country",
+    "company": "Company"
+  },
+  "common": {
+    "welcome": "Welcome",
+    "home": "Home",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm P.",
+    "logout": "Logout",
+    "copyright": "All rights reserved",
+    "name": "Name",
+    "address": "Address",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "update": "Update",
+    "sure_to_delete": "Sure to delete?",
+    "session_expired": "Session expired",
+    "to": "to",
+    "items": "items",
+    "description": "Description",
+    "refresh": "Refresh",
+    "role": "Role",
+    "transfert": {
+      "source": "Source",
+      "target": "Target"
     }
+  },
+  "user": {
+    "table_title": "List of users",
+    "add_user": "Add user",
+    "update_user": "Update user",
+    "password_required": "Password is required",
+    "confirm_password_required": "Confirm password is required",
+    "password_not_match": "The two passwords do not match!"
+  },
+  "role": {
+    "table_title": "List of roles",
+    "add_role": "Add a role",
+    "update_role": "Update a role",
+    "select_role": "Select a role"
+  },
+  "permission": {
+    "table_title": "List of permissions"
+  }
 }

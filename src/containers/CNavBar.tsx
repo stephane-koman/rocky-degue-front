@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Drawer, Button, Image } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
-import Logo from "../assets/images/logo-login.png";
 import { getMenu } from "./CMenu";
+import { SITE_TITLE } from "../utils/helpers/constantHelpers";
 
 const CNavBar = () => {
   const [visible, setVisible] = useState(false);
@@ -23,7 +23,7 @@ const CNavBar = () => {
       />
 
       <Drawer
-        title={<Image src={Logo} preview={false} />}
+        title={SITE_TITLE}
         placement="left"
         closable={false}
         onClose={onHideMenuHandler}

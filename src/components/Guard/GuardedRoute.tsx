@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { getIsLoggedIn } from "../../utils/authHelpers";
+import { getIsLoggedIn } from "../../utils/helpers/authHelpers";
 
 const GuardedRoute = ({ children, ...rest }) => {
   const auth = getIsLoggedIn();

@@ -1,5 +1,5 @@
 import { useReducer, createContext } from "react";
-import { JWT_TOKEN } from "../utils/constantHelpers";
+import { JWT_TOKEN } from "../utils/helpers/constantHelpers";
 
 const initialState = {
   user: null,
@@ -9,17 +9,24 @@ type ContextProps = {
   user: any;
   login: (userData: any) => void;
   logout: () => void;
+  setUser: (userData: any) => void;
 };
 
 const AuthContext = createContext<ContextProps>({
   user: null,
   login: (_) => {},
   logout: () => {},
+  setUser: (_) => {},
 });
 
 const authReducer = (state: any, action: any) => {
   switch (action.type) {
     case "LOGIN":
+      return {
+        ...state
+      };
+
+    case "USER":
       return {
         ...state,
         user: action.payload,
@@ -47,14 +54,21 @@ const AuthProvider = ({children}: any) => {
   }
 
   function logout() {
-    localStorage.removeItem(JWT_TOKEN);
+    localStorage.clear();
     dispatch({
       type: "LOGOUT",
     });
   }
 
+  function setUser(userData: any) {
+    dispatch({
+      type: "USER",
+      payload: userData,
+    });
+  }
+
   return (
-    <AuthContext.Provider value={{ user: state.user, login, logout }}>
+    <AuthContext.Provider value={{ user: state.user, login, logout, setUser }}>
       {children}
     </AuthContext.Provider>
   );

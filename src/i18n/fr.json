@@ -1,43 +1,66 @@
 {
-    "login":  {
-      "sign_in": "Se connecter",
-      "title": "Espace d'administration",
-      "password_required": "Le mot de passe est obligatoire",
-      "email_required": "L'email est obligatoire",
-      "logout_message": "Vous nous quittez déjà!",
-      "auth_error": "Email ou mot de passe incorrect"
-    },
-    "required": {
-        "name": "Le nom est obligatoire",
-        "code": "Le code est obligatoire"
-    },
-    "menu":  {
-        "dashboard": "Tableau de bord",
-        "settings": "Paramètres",
-        "users": "Utilisateurs",
-        "roles": "Rôles",
-        "permissions": "Permissions",
-        "country": "Pays",
-        "company": "Entreprise"
-    },
-    "common": {
-      "welcome": "Bienvenue",
-      "home": "Accueil",
-      "email": "Email",
-      "password": "Mot de passe",
-      "logout": "Se deconnecter",
-      "copyright": "Tous drois réservés",
-      "name": "Nom",
-      "address": "Adresse",
-      "save": "Enregistrer",
-      "cancel": "Annuler",
-      "edit": "Modifier",
-      "update": "Modifier",
-      "sure_to_delete": "Confimez-vous la suppression?",
-      "session_expired": "Votre session a expirée"
-    },
-    "user": {
-        "table_title": "Liste des utilisateurs",
-        "add_user": "Ajouter un utilisateur"
+  "login": {
+    "sign_in": "Se connecter",
+    "title": "Espace d'administration",
+    "password_required": "Le mot de passe est obligatoire",
+    "email_required": "Le mail est obligatoire",
+    "logout_message": "Vous nous quittez déjà!",
+    "auth_error": "Email ou mot de passe incorrect"
+  },
+  "required": {
+    "name": "Le nom est obligatoire",
+    "email": "Le mail est obligatoire"
+  },
+  "menu": {
+    "dashboard": "Tableau de bord",
+    "settings": "Paramètres",
+    "users": "Utilisateurs",
+    "roles": "Rôles",
+    "permissions": "Permissions",
+    "country": "Pays",
+    "company": "Entreprise"
+  },
+  "common": {
+    "welcome": "Bienvenue",
+    "home": "Accueil",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirm_password": "Confirmer MDP",
+    "logout": "Se deconnecter",
+    "copyright": "Tous drois réservés",
+    "name": "Nom",
+    "address": "Adresse",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "edit": "Modifier",
+    "update": "Modifier",
+    "sure_to_delete": "Confimez-vous la suppression?",
+    "session_expired": "Votre session a expirée",
+    "to": "à",
+    "items": "éléments",
+    "description": "Description",
+    "refresh": "Actualiser",
+    "role": "Rôle",
+    "transfert": {
+      "source": "Source",
+      "target": "Cible"
     }
+  },
+  "user": {
+    "table_title": "Liste des utilisateurs",
+    "add_user": "Ajouter un utilisateur",
+    "update_user": "Modifier un utilisateur",
+    "password_required": "Le mot de passe est obligatoire",
+    "confirm_password_required": "Le confirmation du mot de passe est obligatoire",
+    "password_not_match": "Les deux mots de passe ne correspondent pas!"
+  },
+  "role": {
+    "table_title": "Liste des roles",
+    "add_role": "Ajouter un rôle",
+    "update_role": "Modifier un rôle",
+    "select_role": "Sélectionner un rôle"
+  },
+  "permission": {
+    "table_title": "Liste des permissions"
+  }
 }

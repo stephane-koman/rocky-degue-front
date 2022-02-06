@@ -1,6 +1,6 @@
 import axios from "axios";
 import { refreshAccessToken } from "./services/user.service";
-import { JWT_TOKEN } from "./utils/constantHelpers";
+import { JWT_TOKEN } from "./utils/helpers/constantHelpers";
 
 const axiosApiInstance = axios.create({
   baseURL:
@@ -16,7 +16,7 @@ axiosApiInstance.interceptors.request.use(
       config.headers = {
         Authorization: `Bearer ${keys?.access_token}`,
         Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
+        //"Content-Type": "application/x-www-form-urlencoded",
       };
     } else {
       config.headers = {
@@ -39,8 +39,7 @@ axiosApiInstance.interceptors.response.use(
     const originalRequest = error?.config;
 
     if (
-      (error?.response?.status === 400 &&
-        error?.response?.data?.code === "TOKEN_BLACKLISTED") ||
+      error?.response?.status === 400 ||
       (error?.response?.status === 403 &&
         error?.response?.data?.code === "TOKEN_INVALID")
     ) {

@@ -12,8 +12,11 @@ import { Language } from "./enums/Language";
 const lang: any = localStorage.getItem("i18nextLng");
 
 ReactDOM.render(
-  <ConfigProvider locale={lang && lang === Language.EN ? enUS : frFR} virtual={false}>
-      <App />
+  <ConfigProvider
+    locale={lang && lang === Language.EN ? enUS : frFR}
+    virtual={false}
+  >
+    <App />
   </ConfigProvider>,
   document.getElementById("root")
 );

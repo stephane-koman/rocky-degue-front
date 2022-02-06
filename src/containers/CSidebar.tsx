@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 
 // Menu config
 import { getMenu } from "./CMenu";
+import { SITE_TITLE } from "../utils/helpers/constantHelpers";
 
 const { Sider } = Layout;
 
@@ -23,7 +24,7 @@ const CSidebar = ({ collapsed, onCollapse }: IProps) => {
       onCollapse={onCollapse}
     >
       <div className="logo">
-        ROCKY DEGUE
+        {SITE_TITLE}
       </div>
       {getMenu(currPath)}
     </Sider>

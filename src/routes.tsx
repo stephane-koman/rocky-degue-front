@@ -4,6 +4,8 @@ import React from "react";
 const Dashboard = React.lazy(() => import('./pages/dashborad/Dashboard'));
 const NotFound = React.lazy(() => import("./pages/not-found/NotFound"));
 const User = React.lazy(() => import("./pages/user/User"));
+const Role = React.lazy(() => import("./pages/role/Role"));
+const Permission = React.lazy(() => import("./pages/permission/Permission"));
 
 const routes = (t: TFunction) => [
   {
@@ -35,13 +37,13 @@ const routes = (t: TFunction) => [
     path: "/settings/roles",
     name: t("menu.roles"),
     breadcrumbName: t("menu.roles"),
-    component: NotFound,
+    component: Role,
   },
   {
     path: "/settings/permissions",
     name: t("menu.permissions"),
     breadcrumbName: t("menu.permissions"),
-    component: NotFound,
+    component: Permission,
   },
 ];
 

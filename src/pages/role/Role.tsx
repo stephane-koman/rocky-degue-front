@@ -1,29 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Button, Input, Space, Table } from "antd";
-import { EditOutlined, UserAddOutlined, SyncOutlined, SearchOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { Button, Space, Table } from "antd";
+import { EditOutlined, UnlockOutlined, SyncOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
-import { searchUsers } from "../../services/user.service";
+import { searchRoles } from "../../services/role.service";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, showTotat } from "../../utils/helpers/constantHelpers";
-import { IPagination, IPermission, IRole, IUser } from "../../utils/interface";
-import UserModal from "./modal/User.modal";
-import { findAllRoles } from "../../services/role.service";
+import { IPagination, IPermission, IRole } from "../../utils/interface";
+import RoleModal from "./modal/Role.modal";
 import { findAllPermissions } from "../../services/permission.service";
 
-const User = () => {
+const Role = () => {
   const { t } = useTranslation();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(true);
-  const [users, setUsers] = useState<IUser[]>([]);
   const [roles, setRoles] = useState<IRole[]>([]);
   const [permissions, setPermissions] = useState<IPermission[]>([]);
-  const [user, setUser] = useState<IUser>(null);
-  const [sort, setSort] = useState<string>(null);
-  const [filters, setFilters] = useState<any>({
-    name: null,
-    email: null,
-  });
-  const searchInput: any = useRef();
+  const [role, setRole] = useState<IRole>(null);
 
   const [pagination, setPagination] = useState<IPagination>({
     currentPage: DEFAULT_PAGE,
@@ -31,69 +23,16 @@ const User = () => {
     total: 0,
   });
 
-  const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-    }) => (
-      <div className="custom-filter-dropdown">
-        <Input
-          ref={(node) => {
-            searchInput.current = node;
-          }}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => confirm()}
-          style={{ width: 188, marginBottom: 8, display: "block" }}
-        />
-        <Button
-          type="primary"
-          onClick={() => confirm()}
-          icon={<SearchOutlined />}
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button
-          onClick={() => handleReset(confirm, clearFilters)}
-          size="small"
-          style={{ width: 90 }}
-        >
-          Reset
-        </Button>
-      </div>
-    ),
-  });
-
-  const handleReset = (confirm, clearFilters) => {
-    clearFilters();
-    confirm();
-  };
-
   const columns = [
     {
       title: t("common.name"),
       dataIndex: "name",
       key: "name",
-      filters: [],
-      sorter: true,
-      filterSearch: true,
-      ...getColumnSearchProps("name"),
     },
     {
-      title: t("common.email"),
-      dataIndex: "email",
-      key: "email",
-      filters: [],
-      sorter: true,
-      filterSearch: true,
-      ...getColumnSearchProps("email"),
+      title: t("common.description"),
+      dataIndex: "description",
+      key: "description",
     },
     {
       title: "Action",
@@ -112,13 +51,9 @@ const User = () => {
   ];
 
   useEffect(() => {
-    findAllRoles().then((res: any) => {
-      setRoles(res.data);
-    })
-
     findAllPermissions().then((res: any) => {
       setPermissions(res?.data);
-    });
+    })
   }, []);
   
 
@@ -127,11 +62,10 @@ const User = () => {
 
     if (refresh) {
       setLoading(mounted);
-      
-      searchUsers({ ...pagination, ...filters, sort: sort })
+      searchRoles({ ...pagination })
         .then((res: any) => {
           const data: any = res?.data;
-          setUsers(data?.data);
+          setRoles(data?.data);
           setPagination({
             currentPage: data?.current_page,
             size: data?.per_page ? parseInt(data?.per_page) : pagination.size,
@@ -152,15 +86,16 @@ const User = () => {
     };
   }, [refresh]);
 
-  const handleEdit = (user: any) => {
-    setUser(user);
+  const handleEdit = (role: any) => {
+    setRole(role);
     setIsModalVisible(true);
   };
 
   const onChange = (currentPagination: any, filters: any, sorter: any, extra: any) => {
-        
     switch (extra?.action) {
       case "paginate":
+        console.log(currentPagination);
+
         setPagination({
           ...pagination,
           currentPage: currentPagination?.current,
@@ -171,18 +106,14 @@ const User = () => {
 
         break;
 
-      case "filter":
+      case "filters":
         console.log(filters);
-        setFilters({
-          name: filters.name ? filters.name[0] : null,
-          email: filters.email ? filters.email[0] : null,
-        });
-        setRefresh(true);
+
         break;
 
-      case "sort":
-        setSort(sorter.order ? sorter.field + "." + sorter.order : null);
-        setRefresh(true);
+      case "sorters":
+        console.log(sorter);
+
         break;
 
       default:
@@ -195,27 +126,21 @@ const User = () => {
       setRefresh(true);
     }
     setIsModalVisible(false);
-    setUser(null);
+    setRole(null);
   };
 
   const onRefresh = () => {
     setPagination({
       size: DEFAULT_PAGE_SIZE,
       currentPage: DEFAULT_PAGE,
-      total: 0,
+      total: 0
     });
     setRefresh(true);
-  };
+  }
 
   return (
     <div>
-      <UserModal
-        user={user}
-        roles={roles}
-        permissions={permissions}
-        isOpen={isModalVisible}
-        onClose={onCloseModal}
-      />
+      <RoleModal role={role} permissions={permissions} isOpen={isModalVisible} onClose={onCloseModal} />
       <Space
         style={{
           marginBottom: 16,
@@ -223,7 +148,7 @@ const User = () => {
           justifyContent: "space-between",
         }}
       >
-        <h2 className="">{t("user.table_title")}</h2>
+        <h2 className="">{t("role.table_title")}</h2>
         <div>
           <Button
             style={{
@@ -235,17 +160,17 @@ const User = () => {
             {t("common.refresh")}
           </Button>
           <Button
-            icon={<UserAddOutlined />}
+            icon={<UnlockOutlined />}
             type="primary"
             onClick={() => setIsModalVisible(true)}
           >
-            {t("user.add_user")}
+            {t("role.add_role")}
           </Button>
         </div>
       </Space>
       <Table
         rowKey="id"
-        dataSource={users}
+        dataSource={roles}
         columns={columns}
         loading={loading}
         scroll={{ scrollToFirstRowOnChange: true, y: "500px" }}
@@ -264,4 +189,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default Role;

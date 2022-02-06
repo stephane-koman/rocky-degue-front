@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "antd/dist/antd.css";
 import { Layout } from "antd";
 import { CHeader, CFooter, CSidebar, CContent } from ".";
 import "./CLayout.scss";
+import { getUserInfos } from "../services/user.service";
+import { AuthContext } from "../context/auth";
 
 const CLayout = () => {
 
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const authContext = useContext(AuthContext);
 
   const onCollapseHandler = (collapsed: boolean) => {
     setIsCollapsed(collapsed);
@@ -15,6 +18,13 @@ const CLayout = () => {
   const onToggleHandler = () => {
     setIsCollapsed(!isCollapsed);
   };
+
+  useEffect(() => {
+    getUserInfos().then((res: any) => {
+      authContext.setUser(res.data);
+    })
+  }, []);
+  
 
   return (
     <Layout

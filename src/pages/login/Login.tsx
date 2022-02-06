@@ -10,13 +10,14 @@ import {
 } from "@ant-design/icons";
 import { red } from "@ant-design/colors";
 import "./Login.scss";
-import { getIsLoggedIn } from "../../utils/authHelpers";
+import { getIsLoggedIn } from "../../utils/helpers/authHelpers";
 import { AuthContext } from "../../context/auth";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
 import { login } from "../../services/user.service";
 import { Language } from "../../enums/Language";
 import i18n from "../../i18n";
+import { SITE_TITLE } from "../../utils/helpers/constantHelpers";
 
 const config = ({ username }, t: TFunction) => {
   return {
@@ -125,7 +126,7 @@ const Login = () => {
               fontSize: "2rem",
             }}
           >
-            ROCKY DEGUE
+            {SITE_TITLE}
           </h1>
           <Card
             title={t("login.title")}
