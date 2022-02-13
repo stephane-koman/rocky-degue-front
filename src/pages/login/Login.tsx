@@ -1,6 +1,15 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Redirect, useHistory } from "react-router-dom";
-import { Layout, Form, Input, Button, Card, message, Select } from "antd";
+import {
+  Layout,
+  Form,
+  Input,
+  Button,
+  Card,
+  message,
+  Select,
+  Image,
+} from "antd";
 import {
   UserOutlined,
   LockOutlined,
@@ -14,10 +23,11 @@ import { getIsLoggedIn } from "../../utils/helpers/authHelpers";
 import { AuthContext } from "../../context/auth";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
-import { login } from "../../services/user.service";
 import { Language } from "../../enums/Language";
 import i18n from "../../i18n";
 import { SITE_TITLE } from "../../utils/helpers/constantHelpers";
+import LogoRD from "../../assets/images/logo-rd-outline.svg";
+import { userService } from "../../services/user.service";
 
 const config = ({ username }, t: TFunction) => {
   return {
@@ -50,18 +60,18 @@ const Login = () => {
 
   const onFinish = (data: any) => {
     setLoading(true);
-    login(data).then((res: any) => {
-
-      const userData: any = res?.data;
-      message.success(config(userData, t));
-      context.login(userData);
-      history.replace('/');
-      
-    }).catch((err: any) => {
-      setError(err);
-    }).finally(() => {
-      setLoading(false);
-    })
+    userService
+      .login(data)
+      .then((res: any) => {
+        const userData: any = res?.data;
+        message.success(config(userData, t));
+        context.login(userData);
+        history.replace("/");
+      })
+      .catch((err: any) => {
+        setLoading(false);
+        setError(err);
+      });
   };
 
   const onChangeLanguage = (selectedValue: any) => {
@@ -83,16 +93,13 @@ const Login = () => {
   };
 
   useEffect(() => {
-    let expired = new URLSearchParams(history.location.search).get("session");
-    if(expired){
-      message.error(configSession(t)); 
-      history.replace('/login');
-    } 
-    return () => {
-      expired = null;
+    const expired = new URLSearchParams(history.location.search).get("session");
+    if (expired) {
+      message.error(configSession(t));
+      history.replace("/login");
     }
-  }, [history, t]);
-  
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isAuthenticated) {
     return <Redirect to={history?.location?.state?.from?.pathname || "/"} />;
@@ -102,7 +109,14 @@ const Login = () => {
     <div className="Login">
       <Select
         defaultValue={lang}
-        style={{ width: 70, marginRight: "8px", marginTop: "8px", position: "absolute", right: 0, background: "#FFF" }}
+        style={{
+          width: 70,
+          marginRight: "8px",
+          marginTop: "8px",
+          position: "absolute",
+          right: 0,
+          background: "#FFF",
+        }}
         bordered={false}
         onChange={onChangeLanguage}
       >
@@ -117,17 +131,20 @@ const Login = () => {
             margin: "auto",
           }}
         >
-          <h1
+          <div
             style={{
               width: "100%",
-              marginBottom: "15%",
+              marginBottom: "10%",
               textAlign: "center",
               color: "#FFF",
               fontSize: "2rem",
             }}
           >
-            {SITE_TITLE}
-          </h1>
+            <div style={{ marginBottom: "1.5rem" }}>
+              <Image height={80} width={80} src={LogoRD} preview={false} />
+            </div>
+            <div>{SITE_TITLE}</div>
+          </div>
           <Card
             title={t("login.title")}
             style={{

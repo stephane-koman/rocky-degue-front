@@ -1,22 +1,30 @@
 import axiosApiInstance from "../axios-instance";
 import { IRole } from "../utils/interface";
 
-export const addRole = (role: IRole) => {
-  return axiosApiInstance.post("/role/add", role);
-};
-export const updateRole = (id: number, role: IRole) => {
-  return axiosApiInstance.put(`/role/update/${id}`, role);
-};
+class RoleService {
+  add = (role: IRole) => {
+    return axiosApiInstance.post("/role/add", role);
+  };
+  update = (id: number, role: IRole) => {
+    return axiosApiInstance.put(`/role/update/${id}`, role);
+  };
 
-export const searchRoles = (data: any) => {
-  return axiosApiInstance.get("/role/search", {
-    params: {
-      page: data?.currentPage,
-      size: data?.size,
-    },
-  });
-};
+  delete = (id: number) => {
+    return axiosApiInstance.delete(`/role/${id}`);
+  };
+  search = (data: any) => {
+    return axiosApiInstance.get("/role/search", {
+      params: {
+        ...data,
+        page: data?.currentPage,
+      },
+    });
+  };
 
-export const findAllRoles = () => {
-  return axiosApiInstance.get("/role/all");
-};
+  findAll = () => {
+    return axiosApiInstance.get("/role/all");
+  };
+}
+
+export const roleService = new RoleService();
+

@@ -1,10 +1,9 @@
 import React from "react";
-import { Layout } from "antd";
+import { Image, Layout } from "antd";
 import { useLocation } from "react-router-dom";
-
+import LogoRD from "../assets/images/logo-rd.svg";
 // Menu config
 import { getMenu } from "./CMenu";
-import { SITE_TITLE } from "../utils/helpers/constantHelpers";
 
 const { Sider } = Layout;
 
@@ -24,7 +23,7 @@ const CSidebar = ({ collapsed, onCollapse }: IProps) => {
       onCollapse={onCollapse}
     >
       <div className="logo">
-        {SITE_TITLE}
+        <Image height={40} src={LogoRD} preview={false} />
       </div>
       {getMenu(currPath)}
     </Sider>

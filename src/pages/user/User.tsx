@@ -1,29 +1,67 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Input, Space, Table } from "antd";
-import { EditOutlined, UserAddOutlined, SyncOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Menu, Table } from "antd";
+import { UserAddOutlined, LockOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
-import { searchUsers } from "../../services/user.service";
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, showTotat } from "../../utils/helpers/constantHelpers";
+import {
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE,
+  showTotat,
+} from "../../utils/helpers/constantHelpers";
 import { IPagination, IPermission, IRole, IUser } from "../../utils/interface";
 import UserModal from "./modal/User.modal";
-import { findAllRoles } from "../../services/role.service";
-import { findAllPermissions } from "../../services/permission.service";
+import { getUserPermissions } from "../../utils/helpers/authHelpers";
+import { EActionType, ETableActionType } from "../../utils/enum";
+import TableActions from "../../components/TableActions/TableActions";
+import { userService } from "../../services/user.service";
+import { roleService } from "../../services/role.service";
+import { permissionService } from "../../services/permission.service";
+import {
+  ColumnSelectProps,
+  getColumnFilter,
+  getColumnSearchProps,
+  getColumnSelectProps,
+  getColumnSorter,
+} from "../../utils/helpers/menuHelpers";
+import UserPasswordModal from "./modal/UserPassword.modal";
+import {
+  getPermission,
+  getPermissions,
+  USER_PERMISSIONS,
+} from "../../utils/helpers/permissionHelpers";
+import TableHeaderActions from "../../components/TableHeaderActions/TableHeaderActions";
+import PageTitle from "../../components/PageTitle/PageTitle";
+import { FilterDropdownProps } from "antd/lib/table/interface";
+
+enum columnType {
+  Name = "name",
+  Email = "email",
+  Role = "role",
+}
+
+const initFilters = {
+  name: null,
+  email: null,
+  role: [],
+  text_search: null,
+};
 
 const User = () => {
+  const userConnectePermissions: any[] = getUserPermissions();
   const { t } = useTranslation();
+  const searchInputRef = useRef(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(true);
+  const [reset, setReset] = useState<boolean>(false);
+  const [showModalPassword, setShowModalPassword] = useState<boolean>(false);
   const [users, setUsers] = useState<IUser[]>([]);
   const [roles, setRoles] = useState<IRole[]>([]);
   const [permissions, setPermissions] = useState<IPermission[]>([]);
   const [user, setUser] = useState<IUser>(null);
-  const [sort, setSort] = useState<string>(null);
-  const [filters, setFilters] = useState<any>({
-    name: null,
-    email: null,
-  });
-  const searchInput: any = useRef();
+  const [actionType, setActionType] = useState<EActionType>(EActionType.Show);
+  const [sorter, setSorter] = useState<string>(null);
+  const [filters, setFilters] = useState<any>(initFilters);
 
   const [pagination, setPagination] = useState<IPagination>({
     currentPage: DEFAULT_PAGE,
@@ -31,104 +69,110 @@ const User = () => {
     total: 0,
   });
 
-  const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-    }) => (
-      <div className="custom-filter-dropdown">
-        <Input
-          ref={(node) => {
-            searchInput.current = node;
-          }}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => confirm()}
-          style={{ width: 188, marginBottom: 8, display: "block" }}
-        />
-        <Button
-          type="primary"
-          onClick={() => confirm()}
-          icon={<SearchOutlined />}
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button
-          onClick={() => handleReset(confirm, clearFilters)}
-          size="small"
-          style={{ width: 90 }}
-        >
-          Reset
-        </Button>
-      </div>
-    ),
-  });
+  const getColumns = () => {
+    const rolesT: any[] = roles.map((r) => ({
+      value: r.name,
+      text: r.name,
+    }));
 
-  const handleReset = (confirm, clearFilters) => {
-    clearFilters();
-    confirm();
+    const columns: any[] = [
+      {
+        title: t("common." + columnType.Name),
+        dataIndex: columnType.Name,
+        key: columnType.Name,
+        sorter: true,
+        filterSearch: true,
+        filteredValue: getColumnFilter(columnType.Name, filters),
+        sortOrder: getColumnSorter(columnType.Name, sorter),
+        ...getColumnSearchProps(columnType.Name, t),
+      },
+      {
+        title: t("common." + columnType.Email),
+        dataIndex: columnType.Email,
+        key: columnType.Email,
+        filters: [],
+        sorter: true,
+        filterSearch: true,
+        filteredValue: getColumnFilter(columnType.Email, filters),
+        sortOrder: getColumnSorter(columnType.Email, sorter),
+        ...getColumnSearchProps(columnType.Email, t),
+      },
+      {
+        title: t("common." + columnType.Role),
+        key: columnType.Role,
+        dataIndex: ["role", "name"],
+        filters: rolesT,
+        filteredValue: getColumnFilter(columnType.Role, filters),
+        ...getColumnSelectProps(columnType.Role, true, reset),
+      },
+    ];
+
+    if (
+      USER_PERMISSIONS.some((p: string) => userConnectePermissions.includes(p))
+    ) {
+      columns.push({
+        title: t("common.actions"),
+        dataIndex: "",
+        key: "x",
+        render: (_: any, data: any) => (
+          <TableActions
+            type={
+              getPermissions(userConnectePermissions, "user").length > 2
+                ? ETableActionType.Dropdown
+                : ETableActionType.Button
+            }
+            data={data}
+            permissions={{
+              show: getPermission(USER_PERMISSIONS, EActionType.Show),
+              edit: getPermission(USER_PERMISSIONS, EActionType.Edit),
+              delete: getPermission(USER_PERMISSIONS, EActionType.Delete),
+            }}
+            deleteInfo={`${t("common.confirm_delete_info.cet")} ${t(
+              "common.user"
+            ).toLowerCase()}?`}
+            handleAction={handleModal}
+            handleOtherAction={handlePasswordModal}
+            onConfirmDelete={onConfirmDelete}
+          >
+            {userConnectePermissions.includes(
+              getPermission(USER_PERMISSIONS, EActionType.Edit)
+            ) && (
+              <Menu.Item key="password" icon={<LockOutlined />}>
+                {t("common.password")}
+              </Menu.Item>
+            )}
+          </TableActions>
+        ),
+      });
+    }
+
+    return columns;
   };
 
-  const columns = [
-    {
-      title: t("common.name"),
-      dataIndex: "name",
-      key: "name",
-      filters: [],
-      sorter: true,
-      filterSearch: true,
-      ...getColumnSearchProps("name"),
-    },
-    {
-      title: t("common.email"),
-      dataIndex: "email",
-      key: "email",
-      filters: [],
-      sorter: true,
-      filterSearch: true,
-      ...getColumnSearchProps("email"),
-    },
-    {
-      title: "Action",
-      dataIndex: "",
-      key: "x",
-      render: (_: any, record: any) => (
-        <div>
-          <Button
-            icon={<EditOutlined />}
-            type="link"
-            onClick={() => handleEdit(record)}
-          />
-        </div>
-      ),
-    },
-  ];
+  const onConfirmDelete = (userId: any) => {
+    userService.delete(userId).then((_: any) => {
+      setRefresh(true);
+    });
+  };
 
   useEffect(() => {
-    findAllRoles().then((res: any) => {
+    roleService.findAll().then((res: any) => {
       setRoles(res.data);
-    })
+    });
 
-    findAllPermissions().then((res: any) => {
+    permissionService.findAll().then((res: any) => {
       setPermissions(res?.data);
     });
+
+    setReset(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
 
   useEffect(() => {
-    let mounted = true;
-
     if (refresh) {
-      setLoading(mounted);
-      
-      searchUsers({ ...pagination, ...filters, sort: sort })
+      setLoading(true);
+      userService
+        .search({ ...pagination, ...filters, sort: sorter })
         .then((res: any) => {
           const data: any = res?.data;
           setUsers(data?.data);
@@ -144,21 +188,29 @@ const User = () => {
         .finally(() => {
           setLoading(false);
           setRefresh(false);
+          if (reset) setReset(false);
         });
     }
-
-    return () => {
-      mounted = false;
-    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
-  const handleEdit = (user: any) => {
-    setUser(user);
+  const handleModal = (u: any, type: EActionType) => {
+    setActionType(type);
+    setUser(u);
     setIsModalVisible(true);
   };
 
-  const onChange = (currentPagination: any, filters: any, sorter: any, extra: any) => {
-        
+  const handlePasswordModal = (u: any) => {
+    setUser(u);
+    setShowModalPassword(true);
+  };
+
+  const onChange = (
+    currentPagination: any,
+    currentFilters: any,
+    sorter: any,
+    extra: any
+  ) => {
     switch (extra?.action) {
       case "paginate":
         setPagination({
@@ -172,16 +224,16 @@ const User = () => {
         break;
 
       case "filter":
-        console.log(filters);
         setFilters({
-          name: filters.name ? filters.name[0] : null,
-          email: filters.email ? filters.email[0] : null,
+          name: currentFilters.name ? currentFilters.name[0] : null,
+          email: currentFilters.email ? currentFilters.email[0] : null,
+          role: currentFilters.role || [],
         });
         setRefresh(true);
         break;
 
       case "sort":
-        setSort(sorter.order ? sorter.field + "." + sorter.order : null);
+        setSorter(sorter.order ? sorter.field + "." + sorter.order : null);
         setRefresh(true);
         break;
 
@@ -191,64 +243,83 @@ const User = () => {
   };
 
   const onCloseModal = (change?: boolean) => {
-    if(change){
+    if (change) {
       setRefresh(true);
     }
     setIsModalVisible(false);
     setUser(null);
   };
 
+  const onCloseModalPassword = () => {
+    setShowModalPassword(false);
+    setUser(null);
+  };
+
   const onRefresh = () => {
+    if (searchInputRef?.current?.state?.value) {
+      searchInputRef.current.state.value = "";
+    }
     setPagination({
       size: DEFAULT_PAGE_SIZE,
       currentPage: DEFAULT_PAGE,
       total: 0,
     });
+    setSorter(null);
+    setFilters(initFilters);
+    setRefresh(true);
+    setReset(true);
+  };
+
+  const showModal = () => {
+    setActionType(EActionType.Add);
+    setIsModalVisible(true);
+  };
+
+  const onSearchInput = (value: string) => {
+    setFilters((f: any) => ({
+      ...f,
+      text_search: value,
+    }));
     setRefresh(true);
   };
 
   return (
     <div>
+      <UserPasswordModal
+        user={user}
+        isOpen={showModalPassword}
+        onClose={onCloseModalPassword}
+      />
       <UserModal
+        type={actionType}
         user={user}
         roles={roles}
         permissions={permissions}
         isOpen={isModalVisible}
         onClose={onCloseModal}
       />
-      <Space
-        style={{
-          marginBottom: 16,
-          width: "100%",
-          justifyContent: "space-between",
-        }}
+      <PageTitle title={t("user.page_title")} />
+      <TableHeaderActions
+        search
+        refresh
+        searchInputRef={searchInputRef}
+        onSearch={onSearchInput}
+        onRefresh={onRefresh}
       >
-        <h2 className="">{t("user.table_title")}</h2>
-        <div>
-          <Button
-            style={{
-              marginRight: 4,
-            }}
-            icon={<SyncOutlined />}
-            onClick={onRefresh}
-          >
-            {t("common.refresh")}
-          </Button>
-          <Button
-            icon={<UserAddOutlined />}
-            type="primary"
-            onClick={() => setIsModalVisible(true)}
-          >
+        {userConnectePermissions.includes(
+          getPermission(USER_PERMISSIONS, EActionType.Add)
+        ) && (
+          <Button icon={<UserAddOutlined />} type="primary" onClick={showModal}>
             {t("user.add_user")}
           </Button>
-        </div>
-      </Space>
+        )}
+      </TableHeaderActions>
       <Table
         rowKey="id"
         dataSource={users}
-        columns={columns}
+        columns={getColumns()}
         loading={loading}
-        scroll={{ scrollToFirstRowOnChange: true, y: "500px" }}
+        scroll={{ scrollToFirstRowOnChange: true, y: "450px" }}
         pagination={{
           defaultPageSize: DEFAULT_PAGE_SIZE,
           defaultCurrent: DEFAULT_PAGE,
@@ -256,6 +327,7 @@ const User = () => {
           pageSize: pagination.size,
           total: pagination.total,
           showSizeChanger: true,
+          showQuickJumper: true,
           showTotal: (total, range) => showTotat(total, range, t),
         }}
         onChange={onChange}

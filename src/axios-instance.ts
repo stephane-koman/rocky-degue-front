@@ -1,5 +1,4 @@
-import axios from "axios";
-import { refreshAccessToken } from "./services/user.service";
+import axios, { AxiosResponse } from "axios";
 import { JWT_TOKEN } from "./utils/helpers/constantHelpers";
 
 const axiosApiInstance = axios.create({
@@ -36,29 +35,41 @@ axiosApiInstance.interceptors.response.use(
     return response;
   },
   async function (error) {
-    const originalRequest = error?.config;
-
-    if (
-      error?.response?.status === 400 ||
-      (error?.response?.status === 403 &&
-        error?.response?.data?.code === "TOKEN_INVALID")
-    ) {
+    if (error?.response?.status === 403) {
       localStorage.clear();
       window.location.replace("/login?session=expired");
     }
 
     if (
       error?.response?.status === 401 &&
-      error?.response?.data?.code === "TOKEN_EXPIRED" &&
-      !originalRequest?._retry
+      error?.response?.data?.code === "TOKEN_EXPIRED"
     ) {
-      originalRequest._retry = true;
-      const access_token = refreshAccessToken();
-      axios.defaults.headers.common["Authorization"] = "Bearer " + access_token;
-      return axiosApiInstance(originalRequest);
+      changeTokenInLocalStorage(error, true);
     }
+
+    if (
+      error?.response?.status === 400 &&
+      error?.response?.data?.code === "TOKEN_BLACKLISTED"
+    ) {
+      changeTokenInLocalStorage(error);
+    }
+
     return Promise.reject(error);
   }
 );
+
+const changeTokenInLocalStorage = (
+  error: any,
+  isTokenExpired?: boolean
+): Promise<AxiosResponse<any, any>> => {
+  const value = localStorage.getItem(JWT_TOKEN);
+  const keys = JSON.parse(value);
+  if (isTokenExpired) {
+    keys.access_token = error?.response?.data?.token;
+    localStorage.setItem(JWT_TOKEN, JSON.stringify(keys));
+  }
+  error.config.headers["Authorization"] = "Bearer " + keys.access_token;
+  return axiosApiInstance.request(error.config);
+};
 
 export default axiosApiInstance;

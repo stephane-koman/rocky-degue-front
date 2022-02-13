@@ -1,5 +1,5 @@
 import { useReducer, createContext } from "react";
-import { JWT_TOKEN } from "../utils/helpers/constantHelpers";
+import { JWT_TOKEN, USER_INFOS } from "../utils/helpers/constantHelpers";
 
 const initialState = {
   user: null,
@@ -61,6 +61,7 @@ const AuthProvider = ({children}: any) => {
   }
 
   function setUser(userData: any) {
+    localStorage.setItem(USER_INFOS, JSON.stringify(userData));
     dispatch({
       type: "USER",
       payload: userData,

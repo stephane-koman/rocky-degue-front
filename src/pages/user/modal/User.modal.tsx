@@ -15,19 +15,24 @@ import { WarningOutlined } from "@ant-design/icons";
 import { red } from "@ant-design/colors";
 import { useTranslation } from "react-i18next";
 import { IRole, IUser, IPermission } from "../../../utils/interface";
-import { addUser, updateUser } from "../../../services/user.service";
+import { EActionType, EAgainType } from "../../../utils/enum";
+import { userService } from "../../../services/user.service";
+import ModalFooterActions from "../../../components/ModalFooterActions/ModalFooterActions";
 
 const { Option } = Select;
 
 interface IProps {
   isOpen: boolean;
+  type?: EActionType;
   user?: IUser;
   roles?: IRole[];
   permissions?: IPermission[];
   onClose: (change?: boolean) => void;
 }
+
 export const UserModal = ({
   isOpen,
+  type,
   user,
   roles,
   permissions,
@@ -36,6 +41,7 @@ export const UserModal = ({
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
+  const [addAgain, setAddAgain] = useState<boolean>(false);
   const [errors, setErrors] = useState<any[]>([]);
   const [dataSource, setDataSource] = useState<any[]>([]);
   const [targetKeys, setTargetKeys] = useState<any[]>([]);
@@ -44,12 +50,12 @@ export const UserModal = ({
     if (isOpen && user) {
       form.setFieldsValue({
         ...user,
-        role: user?.role?.id
+        role: user?.role?.id,
       });
 
       setDataSource(permissions);
 
-      setTargetKeys(user.permissions.map((p: IPermission) => p.id));
+      setTargetKeys(user?.permissions?.map((p: IPermission) => p.id));
     }
 
     if (isOpen && !user) {
@@ -64,14 +70,16 @@ export const UserModal = ({
         })
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, isOpen, form]);
 
   const handleClose = (change?: boolean) => {
     form.resetFields();
     setErrors([]);
-    onClose(change);
+    if (!addAgain) onClose(change);
     setDataSource([]);
     setTargetKeys([]);
+    setAddAgain(false);
   };
 
   const onUpdate = (resp: any) => {
@@ -85,7 +93,8 @@ export const UserModal = ({
   const onAddUser = (data: IUser) => {
     setLoading(true);
     data.permissions = targetKeys;
-    addUser(data)
+    userService
+      .add(data)
       .then((resp: any) => {
         onUpdate(resp);
       })
@@ -96,7 +105,8 @@ export const UserModal = ({
   const onUpdateUser = (data: IUser) => {
     setLoading(true);
     data.permissions = targetKeys;
-    updateUser(user?.id, data)
+    userService
+      .update(user?.id, data)
       .then((resp: any) => {
         onUpdate(resp);
       })
@@ -129,6 +139,7 @@ export const UserModal = ({
         rules={[{ required: true }]}
       >
         <Select
+          disabled={type === EActionType.Show}
           showSearch
           allowClear
           placeholder={t("role.select_role")}
@@ -151,27 +162,31 @@ export const UserModal = ({
     <Modal
       visible={isOpen}
       destroyOnClose
-      title={user ? t("user.update_user") : t("user.add_user")}
+      title={
+        type === EActionType.Edit ? t("user.update_user") : t("user.add_user")
+      }
       width={1000}
       onCancel={() => handleClose()}
       onOk={form.submit}
-      footer={[
-        <Button key="back" onClick={() => handleClose()}>
-          {t("common.cancel")}
-        </Button>,
-        <Button
-          key="submit"
-          type={"primary"}
-          onClick={form.submit}
+      footer={
+        <ModalFooterActions
+          again={{
+            text: t("common.user"),
+            type: EAgainType.Un
+          }}
+          type={type}
           loading={loading}
-        >
-          {user ? t("common.update") : t("common.save")}
-        </Button>,
-      ]}
+          addAgain={addAgain}
+          onAddAgain={(check: boolean) => setAddAgain(check)}
+          onClose={handleClose}
+          onSubmit={form.submit}
+        />
+      }
     >
       <Form
         form={form}
         name="user-ref"
+        scrollToFirstError
         labelCol={{
           span: 6,
         }}
@@ -219,11 +234,11 @@ export const UserModal = ({
                 },
               ]}
             >
-              <Input />
+              <Input disabled={type === EActionType.Show} />
             </Form.Item>
           </Col>
-          {user && selectComponent}
-          {!user && (
+          {type === EActionType.Edit && selectComponent}
+          {type === EActionType.Add && (
             <Col className="gutter-row" span={12}>
               <Form.Item
                 name="password"
@@ -251,10 +266,10 @@ export const UserModal = ({
                 },
               ]}
             >
-              <Input />
+              <Input disabled={type === EActionType.Show} />
             </Form.Item>
           </Col>
-          {!user && (
+          {type === EActionType.Add && (
             <Col className="gutter-row" span={12}>
               <Form.Item
                 name="password_confirm"
@@ -283,7 +298,7 @@ export const UserModal = ({
             </Col>
           )}
         </Row>
-        {!user && (
+        {type !== EActionType.Edit && (
           <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
             {selectComponent}
           </Row>
@@ -291,11 +306,15 @@ export const UserModal = ({
 
         <Divider />
 
-        <div className="ant-form-item-label" style={{ marginBottom: "24px" }}>
-          Permissions
+        <div
+          className="ant-form-item-label"
+          style={{ marginBottom: "24px", fontWeight: "bold", fontSize: "15px" }}
+        >
+          {t("common.permission")}s
         </div>
 
         <Transfer
+          disabled={type === EActionType.Show}
           rowKey={(record) => record.id}
           titles={[t("common.transfert.source"), t("common.transfert.target")]}
           dataSource={dataSource}

@@ -16,7 +16,7 @@ import { AuthContext } from "../context/auth";
 import CNavBar from "./CNavBar";
 import { Language } from "../enums/Language";
 import { TFunction } from "i18next";
-import { logout } from "../services/user.service";
+import { userService } from "../services/user.service";
 
 interface IProps {
   collapsed: boolean;
@@ -33,14 +33,14 @@ const CHeader = ({ collapsed, onToggle }: IProps) => {
   const history = useHistory();
   const { t, i18n } = useTranslation();
   const [lang, setLang] = useState<Language>(i18n.language as Language);
-  
+
   const handleMenuClick = (e: any) => {
     if (e?.key === "logout") {
-      logout().then((_: any) => {
+      userService.logout().then((_: any) => {
         authContext.logout();
         message.error(config(t));
         history.replace("/login");
-      })
+      });
     }
   };
 

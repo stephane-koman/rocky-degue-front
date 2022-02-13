@@ -5,9 +5,11 @@ import { Content } from "antd/lib/layout/layout";
 import routes from "../routes";
 import Spinner from "../components/Spinner/Spinner";
 import { useTranslation } from "react-i18next";
+import { getUserPermissions } from "../utils/helpers/authHelpers";
 
 const CContent = () => {
   const { t } = useTranslation();
+  const permissions: any[] = getUserPermissions();
   return (
     <Content style={{ margin: "0 16px 16px 16px", overflowY: "auto" }}>
       <div
@@ -23,6 +25,10 @@ const CContent = () => {
           <Switch>
             {routes(t).map((route, idx) => {
               return (
+                (route?.permissions?.some((r: any) =>
+                  permissions?.includes(r)
+                ) ||
+                  !route?.permissions) &&
                 route.component && (
                   <Route
                     key={idx}

@@ -21,6 +21,9 @@
     "company": "Company"
   },
   "common": {
+    "yes": "Yes",
+    "no": "No",
+    "actions": "Actions",
     "welcome": "Welcome",
     "home": "Home",
     "email": "Email",
@@ -32,8 +35,12 @@
     "address": "Address",
     "save": "Save",
     "cancel": "Cancel",
+    "show": "Show",
     "edit": "Edit",
+    "delete": "Delete",
     "update": "Update",
+    "search": "Search",
+    "reset": "Reset",
     "sure_to_delete": "Sure to delete?",
     "session_expired": "Session expired",
     "to": "to",
@@ -41,26 +48,40 @@
     "description": "Description",
     "refresh": "Refresh",
     "role": "Role",
+    "user": "User",
+    "permission": "Permission",
     "transfert": {
       "source": "Source",
       "target": "Target"
-    }
+    },
+    "confirm_delete_info": {
+      "default": "Are you sure to delete this ",
+      "cet": "Are you sure to delete this ",
+      "cette": "Are you sure to delete this "
+    },
+    "add_another_un": "Add an another",
+    "add_another_une": "Add an another",
+    "tous": "all",
+    "tout": "all",
+    "toutes": "all",
+    "select": "Select"
   },
   "user": {
-    "table_title": "List of users",
+    "page_title": "List of users",
     "add_user": "Add user",
     "update_user": "Update user",
     "password_required": "Password is required",
     "confirm_password_required": "Confirm password is required",
-    "password_not_match": "The two passwords do not match!"
+    "password_not_match": "The two passwords do not match!",
+    "init_password": "Init password"
   },
   "role": {
-    "table_title": "List of roles",
+    "page_title": "List of roles",
     "add_role": "Add a role",
     "update_role": "Update a role",
     "select_role": "Select a role"
   },
   "permission": {
-    "table_title": "List of permissions"
+    "page_title": "List of permissions"
   }
 }

@@ -2,45 +2,56 @@ import axiosApiInstance from "../axios-instance";
 import { JWT_TOKEN } from "../utils/helpers/constantHelpers";
 import { IUser } from "../utils/interface";
 
-export const login = (data: any) => {
-  return axiosApiInstance.post("/auth/login", data);
-};
+class UserService {
+  login = (data: any) => {
+    return axiosApiInstance.post("/auth/login", data);
+  };
 
-export const logout = () => {
-  const value = localStorage.getItem(JWT_TOKEN);
-  const data = JSON.parse(value);
+  logout = () => {
+    const value = localStorage.getItem(JWT_TOKEN);
+    const data = JSON.parse(value);
 
-  return axiosApiInstance.post("/auth/logout", data);
-};
+    return axiosApiInstance.post("/auth/logout", data);
+  };
 
-export const addUser = (user: IUser) => {
-  return axiosApiInstance.post("/user/add", user);
-};
+  add = (user: IUser) => {
+    return axiosApiInstance.post("/user/add", user);
+  };
 
-export const getUserInfos = () => {
-  return axiosApiInstance.get("/user/me");
-};
+  update = (id: number, user: IUser) => {
+    return axiosApiInstance.put(`/user/update/${id}`, user);
+  };
 
-export const updateUser = (id: number, user: IUser) => {
-  return axiosApiInstance.put(`/user/update/${id}`, user);
-};
+  delete = (id: number) => {
+    return axiosApiInstance.delete(`/user/${id}`);
+  };
 
-export const searchUsers = (data: any) => {
-  return axiosApiInstance.get("/user/search", {
-    params: {
-      ...data,
-      page: data?.currentPage,
-      size: data?.size,
-      sort: data?.sort,
-    },
-  });
-};
+  resetPassword = (id: number, data: any) => {
+    return axiosApiInstance.put(`/user/reset_password/${id}`, data);
+  };
 
-export const refreshAccessToken = async () => {
-  const value = localStorage.getItem(JWT_TOKEN);
-  const data = JSON.parse(value);
+  search = (data: any) => {
+    return axiosApiInstance.get("/user/search", {
+      params: {
+        ...data,
+        page: data?.currentPage,
+      },
+    });
+  };
 
-  return axiosApiInstance.post("/auth/refresh", data).then((response: any) => {
-    return response?.data?.access_token;
-  });
-};
+  getUserInfos = () => {
+    return axiosApiInstance.get("/user/me");
+  };
+
+  refreshAccessToken = async () => {
+    const value = localStorage.getItem(JWT_TOKEN);
+    const data = JSON.parse(value);
+
+    return axiosApiInstance
+      .post("/auth/refresh", data)
+      .then((response: any) => {
+        return response?.data?.access_token;
+      });
+  };
+}
+export const userService = new UserService();

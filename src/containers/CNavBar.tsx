@@ -3,7 +3,7 @@ import { Drawer, Button, Image } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { getMenu } from "./CMenu";
-import { SITE_TITLE } from "../utils/helpers/constantHelpers";
+import LogoRD from "../assets/images/logo-rd.svg";
 
 const CNavBar = () => {
   const [visible, setVisible] = useState(false);
@@ -23,7 +23,7 @@ const CNavBar = () => {
       />
 
       <Drawer
-        title={SITE_TITLE}
+        title={<Image height={40} src={LogoRD} preview={false} />}
         placement="left"
         closable={false}
         onClose={onHideMenuHandler}

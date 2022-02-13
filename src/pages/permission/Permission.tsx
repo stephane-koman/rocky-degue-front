@@ -4,7 +4,7 @@ import { SyncOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, showTotat } from "../../utils/helpers/constantHelpers";
 import { IPagination, IPermission } from "../../utils/interface";
-import { searchPermissions } from "../../services/permission.service";
+import { permissionService } from "../../services/permission.service";
 
 const Permission = () => {
   const { t } = useTranslation();
@@ -32,11 +32,10 @@ const Permission = () => {
   ];
 
   useEffect(() => {
-    let mounted = true;
-
     if (refresh) {
-      setLoading(mounted);
-      searchPermissions({ ...pagination })
+      setLoading(true);
+      permissionService
+        .search({ ...pagination })
         .then((res: any) => {
           const data: any = res?.data;
           setPermissions(data?.data);
@@ -54,10 +53,7 @@ const Permission = () => {
           setRefresh(false);
         });
     }
-
-    return () => {
-      mounted = false;
-    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
   const onChange = (
@@ -113,7 +109,7 @@ const Permission = () => {
           justifyContent: "space-between",
         }}
       >
-        <h2 className="">{t("permission.table_title")}</h2>
+        <h2 className="">{t("permission.page_title")}</h2>
         <Button icon={<SyncOutlined />} onClick={onRefresh}>
           {t("common.refresh")}
         </Button>

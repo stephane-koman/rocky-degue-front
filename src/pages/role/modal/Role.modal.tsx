@@ -3,7 +3,6 @@ import {
   Modal,
   Form,
   Input,
-  Button,
   List,
   Row,
   Col,
@@ -14,19 +13,23 @@ import { WarningOutlined } from "@ant-design/icons";
 import { red } from "@ant-design/colors";
 import { useTranslation } from "react-i18next";
 import { IPermission, IRole } from "../../../utils/interface";
-import { addRole, updateRole } from "../../../services/role.service";
 import "./Role.modal.scss";
+import { EActionType, EAgainType } from "../../../utils/enum";
+import { roleService } from "../../../services/role.service";
+import ModalFooterActions from "../../../components/ModalFooterActions/ModalFooterActions";
 
 interface IProps {
   isOpen: boolean;
+  type?: EActionType;
   role?: IRole;
   permissions?: IPermission[];
   onClose: (change?: boolean) => void;
 }
-export const RoleModal = ({ isOpen, role, permissions, onClose }: IProps) => {
+export const RoleModal = ({ isOpen, type, role, permissions, onClose }: IProps) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
+  const [addAgain, setAddAgain] = useState<boolean>(false);
   const [errors, setErrors] = useState<any[]>([]);
   const [dataSource, setDataSource] = useState<any[]>([]);
   const [targetKeys, setTargetKeys] = useState<any[]>([]);
@@ -54,9 +57,10 @@ export const RoleModal = ({ isOpen, role, permissions, onClose }: IProps) => {
   const handleClose = (change?: boolean) => {
     form.resetFields();
     setErrors([]);
-    onClose(change);
+    if (!addAgain) onClose(change);
     setDataSource([]);
     setTargetKeys([]);
+    setAddAgain(false);
   };
 
   const onUpdate = (resp: any) => {
@@ -70,7 +74,7 @@ export const RoleModal = ({ isOpen, role, permissions, onClose }: IProps) => {
   const onAddRole = (data: IRole) => {
     setLoading(true);
     data.permissions = targetKeys;
-    addRole(data)
+    roleService.add(data)
       .then((resp: any) => {
         onUpdate(resp);
       })
@@ -81,7 +85,7 @@ export const RoleModal = ({ isOpen, role, permissions, onClose }: IProps) => {
   const onUpdateRole = (data: IRole) => {
     setLoading(true);
     data.permissions = targetKeys;
-    updateRole(role?.id, data)
+    roleService.update(role?.id, data)
       .then((resp: any) => {
         onUpdate(resp);
       })
@@ -110,19 +114,20 @@ export const RoleModal = ({ isOpen, role, permissions, onClose }: IProps) => {
       title={role ? t("role.update_role") : t("role.add_role")}
       onCancel={() => handleClose()}
       onOk={form.submit}
-      footer={[
-        <Button key="back" onClick={() => handleClose()}>
-          {t("common.cancel")}
-        </Button>,
-        <Button
-          key="submit"
-          type="primary"
-          onClick={form.submit}
+      footer={
+        <ModalFooterActions
+          again={{
+            text: t("common.role"),
+            type: EAgainType.Un,
+          }}
+          type={type}
           loading={loading}
-        >
-          {role ? t("common.update") : t("common.save")}
-        </Button>,
-      ]}
+          addAgain={addAgain}
+          onAddAgain={(check: boolean) => setAddAgain(check)}
+          onClose={handleClose}
+          onSubmit={form.submit}
+        />
+      }
     >
       <Form
         form={form}
@@ -173,7 +178,7 @@ export const RoleModal = ({ isOpen, role, permissions, onClose }: IProps) => {
                 },
               ]}
             >
-              <Input />
+              <Input disabled={type === EActionType.Show} />
             </Form.Item>
           </Col>
           <Col className="gutter-row" span={12}>
@@ -182,7 +187,7 @@ export const RoleModal = ({ isOpen, role, permissions, onClose }: IProps) => {
               name="description"
               label={t("common.description")}
             >
-              <Input />
+              <Input disabled={type === EActionType.Show} />
             </Form.Item>
           </Col>
         </Row>
@@ -190,6 +195,7 @@ export const RoleModal = ({ isOpen, role, permissions, onClose }: IProps) => {
         <Divider />
 
         <Transfer
+          disabled={type === EActionType.Show}
           rowKey={(record) => record.id}
           dataSource={dataSource}
           showSearch
