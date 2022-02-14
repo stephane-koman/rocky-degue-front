@@ -216,7 +216,7 @@ const Country = () => {
   };
 
   const showModal = () => {
-    setActionType(EActionType.Edit);
+    setActionType(EActionType.Add);
     setIsModalVisible(true);
   };
 

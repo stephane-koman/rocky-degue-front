@@ -203,9 +203,8 @@ const City = () => {
       case "filter":
         setFilters({
           name: currentFilters.name ? currentFilters.name[0] : null,
-          description: currentFilters.description
-            ? currentFilters.description[0]
-            : null,
+          code: currentFilters.code ? currentFilters.code[0] : null,
+          country: currentFilters.country || [],
         });
         setRefresh(true);
         break;
@@ -245,7 +244,7 @@ const City = () => {
   };
 
   const showModal = () => {
-    setActionType(EActionType.Edit);
+    setActionType(EActionType.Add);
     setIsModalVisible(true);
   };
 
