@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Form, Input, List, Modal, Row } from "antd";
+import { Col, Form, Input, List, Modal, Row } from "antd";
 import { useTranslation } from "react-i18next";
 import { IUser } from "../../../utils/interface";
 import { WarningOutlined } from "@ant-design/icons";
 import { red } from "@ant-design/colors";
 import { userService } from "../../../services/user.service";
+import ModalFooterActions from "../../../components/ModalFooterActions/ModalFooterActions";
+import { EActionType } from "../../../utils/enum";
 
 interface IProps {
   isOpen: boolean;
@@ -49,18 +51,13 @@ const UserPasswordModal = ({ isOpen, user, onClose }: IProps) => {
       title={t("user.init_password")}
       onCancel={() => handleClose()}
       onOk={form.submit}
-      footer={[
-        <Button key="back" onClick={() => handleClose()}>
-          {t("common.cancel")}
-        </Button>,
-        <Button
-          key="submit"
-          type={"primary"}
-          onClick={form.submit}
-        >
-          {t("common.save")}
-        </Button>,
-      ]}
+      footer={
+        <ModalFooterActions
+          type={EActionType.Add}
+          onClose={handleClose}
+          onSubmit={form.submit}
+        />
+      }
     >
       <Form
         form={form}

@@ -10,6 +10,8 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+interface IColumnSelectProps extends FilterDropdownProps, IProps {}
+
 export const recursiveMenu = (
   nav: any,
   currPath: any,
@@ -61,20 +63,43 @@ const handleReset = (
   confirm();
 };
 
-export const getColumnSearchProps = (dataIndex: any, t: TFunction) => ({
-  filterDropdown: ({
-    setSelectedKeys,
-    selectedKeys,
-    confirm,
-    clearFilters,
-  }) => (
+export const ColumnSearchProps = ({
+  setSelectedKeys,
+  selectedKeys,
+  confirm,
+  clearFilters,
+  visible,
+  dataIndex,
+  reset
+}: IColumnSelectProps) => {
+  const [search, setSearch] = useState(null);
+  const { t } = useTranslation();
+  const inputRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (visible) {
+      inputRef?.current?.focus();
+    }
+  }, [visible]);
+
+  useEffect(() => {
+    if (reset) {
+      setSearch(null);
+    }
+  }, [reset]);
+
+  const onChange = (e: any) => {
+    setSearch(e.target.value);
+    setSelectedKeys(e.target.value ? [e.target.value] : []);
+  };
+
+  return (
     <div className="custom-filter-dropdown">
       <Input
+        ref={inputRef}
         placeholder={`${t("common.search")} ${t(`common.${dataIndex}`)}`}
-        value={selectedKeys[0]}
-        onChange={(e) =>
-          setSelectedKeys(e.target.value ? [e.target.value] : [])
-        }
+        value={search}
+        onChange={onChange}
         onPressEnter={() => confirm()}
         style={{ width: 200, marginBottom: 8, display: "block" }}
         autoFocus
@@ -97,6 +122,16 @@ export const getColumnSearchProps = (dataIndex: any, t: TFunction) => ({
         {t("common.search")}
       </Button>
     </div>
+  );
+};
+
+export const getColumnSearchProps = (dataIndex: any, reset?: boolean) => ({
+  filterDropdown: (props: FilterDropdownProps) => (
+    <ColumnSearchProps
+      dataIndex={dataIndex}
+      reset={reset}
+      {...props}
+    />
   ),
 });
 
@@ -162,8 +197,6 @@ interface IProps {
   filterMultiple?: boolean;
   reset?: boolean;
 }
-
-interface IColumnSelectProps extends FilterDropdownProps, IProps {}
 
 export const ColumnSelectProps = ({
   filters,

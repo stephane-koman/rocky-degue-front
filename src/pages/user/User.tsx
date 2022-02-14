@@ -84,7 +84,7 @@ const User = () => {
         filterSearch: true,
         filteredValue: getColumnFilter(columnType.Name, filters),
         sortOrder: getColumnSorter(columnType.Name, sorter),
-        ...getColumnSearchProps(columnType.Name, t),
+        ...getColumnSearchProps(columnType.Name, reset),
       },
       {
         title: t("common." + columnType.Email),
@@ -95,7 +95,7 @@ const User = () => {
         filterSearch: true,
         filteredValue: getColumnFilter(columnType.Email, filters),
         sortOrder: getColumnSorter(columnType.Email, sorter),
-        ...getColumnSearchProps(columnType.Email, t),
+        ...getColumnSearchProps(columnType.Email, reset),
       },
       {
         title: t("common." + columnType.Role),

@@ -8,6 +8,7 @@
     "auth_error": "Incorrect email or password"
   },
   "required": {
+    "code": "Code is required",
     "name": "Name is required",
     "email": "Email is required"
   },
@@ -18,7 +19,9 @@
     "roles": "Roles",
     "permissions": "Permissions",
     "country": "Country",
-    "company": "Company"
+    "city": "city",
+    "countries": "Countries",
+    "cities": "Cities"
   },
   "common": {
     "yes": "Yes",
@@ -31,6 +34,7 @@
     "confirm_password": "Confirm P.",
     "logout": "Logout",
     "copyright": "All rights reserved",
+    "code": "Code",
     "name": "Name",
     "address": "Address",
     "save": "Save",
@@ -50,6 +54,8 @@
     "role": "Role",
     "user": "User",
     "permission": "Permission",
+    "country": "Country",
+    "city": "City",
     "transfert": {
       "source": "Source",
       "target": "Target"
@@ -83,5 +89,16 @@
   },
   "permission": {
     "page_title": "List of permissions"
+  },
+  "country": {
+    "page_title": "List of countries",
+    "add_country": "Add country",
+    "update_country": "Update country",
+    "select_country": "Select a country"
+  },
+  "city": {
+    "page_title": "List of cities",
+    "add_city": "Add city",
+    "update_city": "Update city"
   }
 }

@@ -5,8 +5,11 @@ import {
   TeamOutlined,
   ToolOutlined,
   AppstoreAddOutlined,
+  GlobalOutlined,
+  ApartmentOutlined
 } from "@ant-design/icons";
 import { TFunction } from "i18next";
+import { CITY_PERMISSIONS, COUNTRY_PERMISSIONS, PERMISSION_PERMISSIONS, ROLE_PERMISSIONS, USER_PERMISSIONS } from "../utils/helpers/permissionHelpers";
 
 const _nav = (t: TFunction) => [
   {
@@ -18,30 +21,37 @@ const _nav = (t: TFunction) => [
     name: t("menu.settings"),
     to: "/settings",
     icon: <SettingOutlined />,
-    permissions: ["show_user", "add_user", "update_user", "delete_user"],
+    permissions: USER_PERMISSIONS,
     _children: [
       {
         name: t("menu.users"),
         to: "/settings/users",
         icon: <TeamOutlined />,
-        permissions: ["show_user", "add_user", "update_user", "delete_user"],
+        permissions: USER_PERMISSIONS,
       },
       {
         name: t("menu.roles"),
         to: "/settings/roles",
         icon: <ToolOutlined />,
-        permissions: ["show_role", "add_role", "update_role", "delete_role"],
+        permissions: ROLE_PERMISSIONS,
       },
       {
         name: t("menu.permissions"),
         to: "/settings/permissions",
         icon: <AppstoreAddOutlined />,
-        permissions: [
-          "show_permission",
-          "add_permission",
-          "update_permission",
-          "delete_permission",
-        ],
+        permissions: PERMISSION_PERMISSIONS,
+      },
+      {
+        name: t("menu.countries"),
+        to: "/settings/countries",
+        icon: <GlobalOutlined />,
+        permissions: COUNTRY_PERMISSIONS,
+      },
+      {
+        name: t("menu.cities"),
+        to: "/settings/cities",
+        icon: <ApartmentOutlined />,
+        permissions: CITY_PERMISSIONS,
       },
     ],
   },

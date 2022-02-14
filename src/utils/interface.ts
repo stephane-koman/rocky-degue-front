@@ -1,25 +1,32 @@
 import React from "react";
 import { EActionType, ETableActionType } from "./enum";
 
-export interface IUser {
+export interface IDefault {
   id: number;
   name: string;
+}
+export interface IUser extends IDefault {
   email: string;
   role: IRole;
   permissions: IPermission[];
-}
+} {};
 
-export interface IRole {
-  id: number;
-  name: string;
+export interface IRole extends IDefault {
   description: string;
   permissions: IPermission[];
 }
 
-export interface IPermission {
-  id: number;
-  name: string;
+export interface IPermission extends IDefault {
   description: string;
+}
+
+export interface ICity extends IDefault {
+  code: string;
+  country: IDefault;
+}
+
+export interface ICountry extends IDefault {
+  code: string;
 }
 
 export interface IPagination {

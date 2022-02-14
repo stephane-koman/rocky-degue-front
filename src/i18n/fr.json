@@ -8,6 +8,7 @@
     "auth_error": "Email ou mot de passe incorrect"
   },
   "required": {
+    "code": "Le code est obligatoire",
     "name": "Le nom est obligatoire",
     "email": "Le mail est obligatoire"
   },
@@ -18,7 +19,9 @@
     "roles": "Rôles",
     "permissions": "Permissions",
     "country": "Pays",
-    "company": "Entreprise"
+    "city": "Ville",
+    "countries": "Pays",
+    "cities": "Villes"
   },
   "common": {
     "yes": "Oui",
@@ -31,6 +34,7 @@
     "confirm_password": "Confirmer MDP",
     "logout": "Se deconnecter",
     "copyright": "Tous drois réservés",
+    "code": "Code",
     "name": "Nom",
     "address": "Adresse",
     "save": "Enregistrer",
@@ -50,6 +54,8 @@
     "role": "Rôle",
     "user": "Utilisateur",
     "permission": "Permission",
+    "country": "Pays",
+    "city": "Ville",
     "transfert": {
       "source": "Source",
       "target": "Cible"
@@ -83,5 +89,16 @@
   },
   "permission": {
     "page_title": "Liste des permissions"
+  },
+  "country": {
+    "page_title": "Liste des pays",
+    "add_country": "Ajouter un pays",
+    "update_country": "Modifier un pays",
+    "select_country": "Sélectionner un pays"
+  },
+  "city": {
+    "page_title": "Liste des villes",
+    "add_city": "Ajouter une ville",
+    "update_city": "Modifier une ville"
   }
 }

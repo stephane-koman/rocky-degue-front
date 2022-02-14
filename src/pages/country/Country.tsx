@@ -7,29 +7,20 @@ import {
   DEFAULT_PAGE_SIZE,
   showTotat,
 } from "../../utils/helpers/constantHelpers";
-import { IPagination, IPermission, IRole } from "../../utils/interface";
-import RoleModal from "./modal/Role.modal";
+import { IPagination, ICountry } from "../../utils/interface";
+import CountryModal from "./modal/Country.modal";
 import TableActions from "../../components/TableActions/TableActions";
 import { getUserPermissions } from "../../utils/helpers/authHelpers";
 import { EActionType, ETableActionType } from "../../utils/enum";
-import { roleService } from "../../services/role.service";
-import { permissionService } from "../../services/permission.service";
-import {
-  getColumnFilter,
-  getColumnSearchProps,
-  getColumnSorter,
-} from "../../utils/helpers/menuHelpers";
+import { countryService } from "../../services/country.service";
+import { getColumnFilter, getColumnSearchProps, getColumnSorter } from "../../utils/helpers/menuHelpers";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import TableHeaderActions from "../../components/TableHeaderActions/TableHeaderActions";
-import {
-  getPermission,
-  getPermissions,
-  ROLE_PERMISSIONS,
-} from "../../utils/helpers/permissionHelpers";
+import { getPermission, getPermissions, COUNTRY_PERMISSIONS } from "../../utils/helpers/permissionHelpers";
 
 enum columnType {
   Name = "name",
-  Description = "description",
+  Code = "code",
 }
 
 const initFiliters = {
@@ -37,17 +28,16 @@ const initFiliters = {
   description: null,
   text_search: null,
 };
-const Role = () => {
+const Country = () => {
   const userConnectePermissions: any[] = getUserPermissions();
   const { t } = useTranslation();
   const searchInputRef = useRef(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(true);
-  const [roles, setRoles] = useState<IRole[]>([]);
-  const [permissions, setPermissions] = useState<IPermission[]>([]);
+  const [countries, setCountries] = useState<ICountry[]>([]);
   const [actionType, setActionType] = useState<EActionType>(EActionType.Show);
-  const [role, setRole] = useState<IRole>(null);
+  const [country, setCountry] = useState<ICountry>(null);
   const [sorter, setSorter] = useState<string>(null);
   const [filters, setFilters] = useState<any>(initFiliters);
   const [reset, setReset] = useState<boolean>(false);
@@ -61,6 +51,16 @@ const Role = () => {
   const getColumns = () => {
     const columns: any[] = [
       {
+        title: t("common." + columnType.Code),
+        dataIndex: columnType.Code,
+        key: columnType.Code,
+        sorter: true,
+        filterSearch: true,
+        filteredValue: getColumnFilter(columnType.Code, filters),
+        sortOrder: getColumnSorter(columnType.Code, sorter),
+        ...getColumnSearchProps(columnType.Code, reset),
+      },
+      {
         title: t("common." + columnType.Name),
         dataIndex: columnType.Name,
         key: columnType.Name,
@@ -70,20 +70,10 @@ const Role = () => {
         sortOrder: getColumnSorter(columnType.Name, sorter),
         ...getColumnSearchProps(columnType.Name, reset),
       },
-      {
-        title: t("common." + columnType.Description),
-        dataIndex: columnType.Description,
-        key: columnType.Description,
-        sorter: true,
-        filterSearch: true,
-        filteredValue: getColumnFilter(columnType.Description, filters),
-        sortOrder: getColumnSorter(columnType.Description, sorter),
-        ...getColumnSearchProps(columnType.Description, reset),
-      },
     ];
 
     if (
-      ROLE_PERMISSIONS.some((p: string) => userConnectePermissions.includes(p))
+      COUNTRY_PERMISSIONS.some((p: string) => userConnectePermissions.includes(p))
     ) {
       columns.push({
         title: t("common.actions"),
@@ -92,18 +82,18 @@ const Role = () => {
         render: (_: any, data: any) => (
           <TableActions
             type={
-              getPermissions(userConnectePermissions, "role").length > 2
+              getPermissions(userConnectePermissions, "country").length > 2
                 ? ETableActionType.Dropdown
                 : ETableActionType.Button
             }
             data={data}
             permissions={{
-              show: getPermission(ROLE_PERMISSIONS, EActionType.Show),
-              edit: getPermission(ROLE_PERMISSIONS, EActionType.Edit),
-              delete: getPermission(ROLE_PERMISSIONS, EActionType.Delete),
+              show: getPermission(COUNTRY_PERMISSIONS, EActionType.Show),
+              edit: getPermission(COUNTRY_PERMISSIONS, EActionType.Edit),
+              delete: getPermission(COUNTRY_PERMISSIONS, EActionType.Delete),
             }}
-            deleteInfo={`${t("common.confirm_delete_info.cet")} ${t(
-              "common.role"
+            deleteInfo={`${t("common.confirm_delete_info.ce")} ${t(
+              "common.country"
             ).toLowerCase()}?`}
             handleAction={handleModal}
             onConfirmDelete={onConfirmDelete}
@@ -120,29 +110,23 @@ const Role = () => {
   };
 
   const onConfirmDelete = (userId: any) => {
-    roleService.delete(userId).then((_: any) => {
+    countryService.delete(userId).then((_: any) => {
       setRefresh(true);
     });
   };
 
   useEffect(() => {
-    permissionService.findAll().then((res: any) => {
-      setPermissions(res?.data);
-    });
-
     setReset(false);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  
   useEffect(() => {
     if (refresh) {
       setLoading(true);
-      roleService
+      countryService
         .search({ ...pagination, ...filters, sort: sorter })
         .then((res: any) => {
           const data: any = res?.data;
-          setRoles(data?.data);
+          setCountries(data?.data);
           setPagination({
             currentPage: data?.current_page,
             size: data?.per_page ? parseInt(data?.per_page) : pagination.size,
@@ -155,7 +139,7 @@ const Role = () => {
         .finally(() => {
           setLoading(false);
           setRefresh(false);
-          if (reset) setReset(false);
+          if(reset) setReset(false);
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -163,7 +147,7 @@ const Role = () => {
 
   const handleModal = (r: any, type: EActionType) => {
     setActionType(type);
-    setRole(r);
+    setCountry(r);
     setIsModalVisible(true);
   };
 
@@ -175,6 +159,8 @@ const Role = () => {
   ) => {
     switch (extra?.action) {
       case "paginate":
+        console.log(currentPagination);
+
         setPagination({
           ...pagination,
           currentPage: currentPagination?.current,
@@ -211,7 +197,7 @@ const Role = () => {
       setRefresh(true);
     }
     setIsModalVisible(false);
-    setRole(null);
+    setCountry(null);
   };
 
   const onRefresh = () => {
@@ -244,14 +230,13 @@ const Role = () => {
 
   return (
     <div>
-      <RoleModal
+      <CountryModal
         type={actionType}
-        role={role}
-        permissions={permissions}
+        country={country}
         isOpen={isModalVisible}
         onClose={onCloseModal}
       />
-      <PageTitle title={t("role.page_title")} />
+      <PageTitle title={t("country.page_title")} />
       <TableHeaderActions
         search
         refresh
@@ -260,17 +245,17 @@ const Role = () => {
         onRefresh={onRefresh}
       >
         {userConnectePermissions.includes(
-          getPermission(ROLE_PERMISSIONS, EActionType.Add)
+          getPermission(COUNTRY_PERMISSIONS, EActionType.Add)
         ) && (
           <Button icon={<UnlockOutlined />} type="primary" onClick={showModal}>
-            {t("role.add_role")}
+            {t("country.add_country")}
           </Button>
         )}
       </TableHeaderActions>
 
       <Table
         rowKey="id"
-        dataSource={roles}
+        dataSource={countries}
         columns={getColumns()}
         loading={loading}
         scroll={{ scrollToFirstRowOnChange: true, y: "450px" }}
@@ -290,4 +275,4 @@ const Role = () => {
   );
 };
 
-export default Role;
+export default Country;
