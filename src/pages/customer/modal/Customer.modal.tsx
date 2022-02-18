@@ -1,20 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  Modal,
-  Form,
-  Input,
-  List,
-  Row,
-  Col,
-  Select,
-} from "antd";
+import { Modal, Form, Input, List, Row, Col, Select } from "antd";
 import { WarningOutlined } from "@ant-design/icons";
 import { red } from "@ant-design/colors";
 import { useTranslation } from "react-i18next";
-import { ICity, IDefault } from "../../../utils/interface";
-import "./City.modal.scss";
+import { ICustomer, ICountry } from "../../../utils/interface";
 import { EActionType, EAgainType } from "../../../utils/enum";
-import { cityService } from "../../../services/city.service";
+import { customerService } from "../../../services/customer.service";
 import ModalFooterActions from "../../../components/ModalFooterActions/ModalFooterActions";
 
 const { Option } = Select;
@@ -22,12 +13,18 @@ const { Option } = Select;
 interface IProps {
   isOpen: boolean;
   type?: EActionType;
-  city?: ICity;
-  countries?: IDefault[];
+  customer?: ICustomer;
+  countries?: ICountry[];
   onClose: (change?: boolean) => void;
 }
 
-export const CityModal = ({ isOpen, type, city, countries, onClose }: IProps) => {
+export const CustomerModal = ({
+  isOpen,
+  type,
+  customer,
+  countries,
+  onClose,
+}: IProps) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
@@ -35,13 +32,18 @@ export const CityModal = ({ isOpen, type, city, countries, onClose }: IProps) =>
   const [errors, setErrors] = useState<any[]>([]);
 
   useEffect(() => {
-    if (isOpen && city) {
+    if (isOpen && customer) {
       form.setFieldsValue({
-        ...city,
-        country: city?.country?.id
+        ...customer,
+        country: customer?.country?.id,
       });
     }
-  }, [city, isOpen, form]);
+
+    if (isOpen && !customer) {
+      form.resetFields();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customer, isOpen, form]);
 
   const handleClose = (change?: boolean) => {
     form.resetFields();
@@ -58,9 +60,10 @@ export const CityModal = ({ isOpen, type, city, countries, onClose }: IProps) =>
     }
   };
 
-  const onAddCity = (data: ICity) => {
+  const onAddCustomer = (data: ICustomer) => {
     setLoading(true);
-    cityService.add(data)
+    customerService
+      .add(data)
       .then((resp: any) => {
         onUpdate(resp);
       })
@@ -68,9 +71,10 @@ export const CityModal = ({ isOpen, type, city, countries, onClose }: IProps) =>
       .finally(() => setLoading(false));
   };
 
-  const onUpdateCity = (data: ICity) => {
+  const onUpdateCustomer = (data: ICustomer) => {
     setLoading(true);
-    cityService.update(city?.id, data)
+    customerService
+      .update(customer?.id, data)
       .then((resp: any) => {
         onUpdate(resp);
       })
@@ -79,27 +83,26 @@ export const CityModal = ({ isOpen, type, city, countries, onClose }: IProps) =>
   };
 
   const handleSubmit = (values: any) => {
-    if (city) onUpdateCity(values);
-    else onAddCity(values);
+    if (customer) onUpdateCustomer(values);
+    else onAddCustomer(values);
   };
 
-  const onCountryChange = (value: string) => {
+  const onRoleChange = (value: string) => {
     form.setFieldsValue({ role: value });
   };
 
-
   return (
     <Modal
-      className="City"
       visible={isOpen}
       destroyOnClose
-      title={t(`city.${type}_city`)}
+      title={t(`customer.${type}_customer`)}
+      width={1000}
       onCancel={() => handleClose()}
       onOk={form.submit}
       footer={
         <ModalFooterActions
           again={{
-            text: t("common.city"),
+            text: t("common.customer"),
             type: EAgainType.Un,
           }}
           type={type}
@@ -113,7 +116,8 @@ export const CityModal = ({ isOpen, type, city, countries, onClose }: IProps) =>
     >
       <Form
         form={form}
-        name="city-ref"
+        name="customer-ref"
+        scrollToFirstError
         labelCol={{
           span: 6,
         }}
@@ -122,9 +126,12 @@ export const CityModal = ({ isOpen, type, city, countries, onClose }: IProps) =>
         }}
         initialValues={{
           id: "",
-          code: "",
           name: "",
-          country: countries[0]?.id || null,
+          email: "",
+          phone: "",
+          address: "",
+          description: "",
+          country: countries[0]?.id,
         }}
         onFinish={handleSubmit}
       >
@@ -146,23 +153,10 @@ export const CityModal = ({ isOpen, type, city, countries, onClose }: IProps) =>
             )}
           />
         )}
+
         <Input name="id" type="hidden" />
 
         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-          <Col className="gutter-row" span={12}>
-            <Form.Item
-              name="code"
-              label={t("common.code")}
-              rules={[
-                {
-                  required: true,
-                  message: t("required.code"),
-                },
-              ]}
-            >
-              <Input disabled={type === EActionType.Show} />
-            </Form.Item>
-          </Col>
           <Col className="gutter-row" span={12}>
             <Form.Item
               name="name"
@@ -179,6 +173,7 @@ export const CityModal = ({ isOpen, type, city, countries, onClose }: IProps) =>
           </Col>
           <Col className="gutter-row" span={12}>
             <Form.Item
+              className="mb-0"
               name="country"
               label={t("common.country")}
               rules={[{ required: true }]}
@@ -188,18 +183,78 @@ export const CityModal = ({ isOpen, type, city, countries, onClose }: IProps) =>
                 showSearch
                 allowClear
                 placeholder={t("country.select_country")}
-                onChange={onCountryChange}
+                onChange={onRoleChange}
                 filterOption={(input: any, option: any) =>
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >=
                   0
                 }
               >
-                {countries.map((country: IDefault) => (
+                {countries.map((country: ICountry) => (
                   <Option key={country.id} value={country.id}>
-                    {country?.name?.toUpperCase()}
+                    {country.name.toUpperCase()}
                   </Option>
                 ))}
               </Select>
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+          <Col className="gutter-row" span={12}>
+            <Form.Item
+              name="email"
+              label={t("common.email")}
+              rules={[
+                {
+                  required: true,
+                  type: "email",
+                  message: t("required.email"),
+                },
+              ]}
+            >
+              <Input disabled={type === EActionType.Show} />
+            </Form.Item>
+          </Col>
+          <Col className="gutter-row" span={12}>
+            <Form.Item
+              name="phone"
+              label={t("common.phone")}
+              rules={[
+                {
+                  required: true,
+                  min: 8,
+                  max: 11,
+                  message: t("required.phone"),
+                },
+              ]}
+            >
+              <Input disabled={type === EActionType.Show} />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+          <Col className="gutter-row" span={12}>
+            <Form.Item
+              name="address"
+              label={t("common.address")}
+              rules={[
+                {
+                  required: true,
+                  message: t("required.address"),
+                },
+              ]}
+            >
+              <Input disabled={type === EActionType.Show} />
+            </Form.Item>
+          </Col>
+          <Col className="gutter-row" span={12}>
+            <Form.Item name="description" label={t("common.description")}>
+              <Input.TextArea
+                rows={4}
+                maxLength={6}
+                disabled={type === EActionType.Show}
+              />
             </Form.Item>
           </Col>
         </Row>
@@ -208,4 +263,4 @@ export const CityModal = ({ isOpen, type, city, countries, onClose }: IProps) =>
   );
 };
 
-export default CityModal;
+export default CustomerModal;

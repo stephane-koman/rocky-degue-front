@@ -10,7 +10,9 @@
   "required": {
     "code": "Le code est obligatoire",
     "name": "Le nom est obligatoire",
-    "email": "Le mail est obligatoire"
+    "email": "Le mail est obligatoire",
+    "phone": "Le téléphone est obligatoire",
+    "address": "L'adresse est obligatoire"
   },
   "menu": {
     "dashboard": "Tableau de bord",
@@ -21,7 +23,9 @@
     "country": "Pays",
     "city": "Ville",
     "countries": "Pays",
-    "cities": "Villes"
+    "cities": "Villes",
+    "customers": "Clients",
+    "payment_types": "Moyens de paiement"
   },
   "common": {
     "yes": "Oui",
@@ -37,6 +41,7 @@
     "code": "Code",
     "name": "Nom",
     "address": "Adresse",
+    "phone": "Téléphone",
     "save": "Enregistrer",
     "cancel": "Annuler",
     "show": "Afficher",
@@ -56,6 +61,8 @@
     "permission": "Permission",
     "country": "Pays",
     "city": "Ville",
+    "customer": "Client",
+    "payment_type": "Moyen de paiement",
     "transfert": {
       "source": "Source",
       "target": "Cible"
@@ -75,7 +82,9 @@
   "user": {
     "page_title": "Liste des utilisateurs",
     "add_user": "Ajouter un utilisateur",
-    "update_user": "Modifier un utilisateur",
+    "show_user": "Afficher un utilisateur",
+    "edit_user": "Modifier un utilisateur",
+    "delete_user": "Supprimer un utilisateur",
     "password_required": "Le mot de passe est obligatoire",
     "confirm_password_required": "Le confirmation du mot de passe est obligatoire",
     "password_not_match": "Les deux mots de passe ne correspondent pas!",
@@ -84,7 +93,9 @@
   "role": {
     "page_title": "Liste des roles",
     "add_role": "Ajouter un rôle",
-    "update_role": "Modifier un rôle",
+    "show_role": "Afficher un rôle",
+    "edit_role": "Modifier un rôle",
+    "delete_role": "Supprimer un rôle",
     "select_role": "Sélectionner un rôle"
   },
   "permission": {
@@ -93,12 +104,30 @@
   "country": {
     "page_title": "Liste des pays",
     "add_country": "Ajouter un pays",
-    "update_country": "Modifier un pays",
+    "show_country": "Afficher un pays",
+    "edit_country": "Modifier un pays",
+    "delete_country": "Supprimer un pays",
     "select_country": "Sélectionner un pays"
   },
   "city": {
     "page_title": "Liste des villes",
     "add_city": "Ajouter une ville",
-    "update_city": "Modifier une ville"
+    "show_city": "Afficher une ville",
+    "edit_city": "Modifier une ville",
+    "delete_city": "Supprimer une ville"
+  },
+  "customer": {
+    "page_title": "Liste des clients",
+    "add_customer": "Ajouter un client",
+    "show_customer": "Afficher un client",
+    "edit_customer": "Modifier un client",
+    "delete_customer": "Supprimer un client"
+  },
+  "payment_type": {
+    "page_title": "Liste des moyens de paiement",
+    "add_payment_type": "Ajouter un moyen de paiement",
+    "show_payment_type": "Afficher un moyen de paiement",
+    "edit_payment_type": "Modifier un moyen de paiement",
+    "delete_payment_type": "Supprimer un moyen de paiement"
   }
 }

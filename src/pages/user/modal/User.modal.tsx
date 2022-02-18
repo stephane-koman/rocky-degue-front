@@ -161,9 +161,7 @@ export const UserModal = ({
     <Modal
       visible={isOpen}
       destroyOnClose
-      title={
-        type === EActionType.Edit ? t("user.update_user") : t("user.add_user")
-      }
+      title={t(`user.${type}_user`)}
       width={1000}
       onCancel={() => handleClose()}
       onOk={form.submit}
@@ -236,7 +234,7 @@ export const UserModal = ({
               <Input disabled={type === EActionType.Show} />
             </Form.Item>
           </Col>
-          {type === EActionType.Edit && selectComponent}
+          {type !== EActionType.Add && selectComponent}
           {type === EActionType.Add && (
             <Col className="gutter-row" span={12}>
               <Form.Item
@@ -297,7 +295,7 @@ export const UserModal = ({
             </Col>
           )}
         </Row>
-        {type !== EActionType.Edit && (
+        {type === EActionType.Add && (
           <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
             {selectComponent}
           </Row>

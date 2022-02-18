@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Col, Form, Input, List, Modal, Row } from "antd";
 import { useTranslation } from "react-i18next";
-import { ICountry } from "../../../utils/interface";
+import { IPaymentType } from "../../../utils/interface";
 import { WarningOutlined } from "@ant-design/icons";
 import { red } from "@ant-design/colors";
-import { countryService } from "../../../services/country.service";
+import { paymentTypeService } from "../../../services/paymentType.service";
 import ModalFooterActions from "../../../components/ModalFooterActions/ModalFooterActions";
 import { EActionType, EAgainType } from "../../../utils/enum";
 
 interface IProps {
   isOpen: boolean;
   type?: EActionType;
-  country: ICountry;
+  paymentType: IPaymentType;
   onClose: (change?: boolean) => void;
 }
 
-const CountryModal = ({ isOpen, type, country, onClose }: IProps) => {
+const PaymentTypeModal = ({ isOpen, type, paymentType, onClose }: IProps) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [errors, setErrors] = useState<any[]>([]);
@@ -23,10 +23,10 @@ const CountryModal = ({ isOpen, type, country, onClose }: IProps) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (isOpen && country) {
-      form.setFieldsValue(country);
+    if (isOpen && paymentType) {
+      form.setFieldsValue(paymentType);
     }
-  }, [country, isOpen, form]);
+  }, [paymentType, isOpen, form]);
 
   const onUpdate = (resp: any) => {
     if (resp?.data?.errors) {
@@ -36,9 +36,9 @@ const CountryModal = ({ isOpen, type, country, onClose }: IProps) => {
     }
   };
 
-  const onAddUser = (data: ICountry) => {
+  const onAddUser = (data: IPaymentType) => {
     setLoading(true);
-    countryService
+    paymentTypeService
       .add(data)
       .then((resp: any) => {
         onUpdate(resp);
@@ -47,10 +47,10 @@ const CountryModal = ({ isOpen, type, country, onClose }: IProps) => {
       .finally(() => setLoading(false));
   };
 
-  const onUpdateUser = (data: ICountry) => {
+  const onUpdateUser = (data: IPaymentType) => {
     setLoading(true);
-    countryService
-      .update(country?.id, data)
+    paymentTypeService
+      .update(paymentType?.id, data)
       .then((resp: any) => {
         onUpdate(resp);
       })
@@ -59,18 +59,18 @@ const CountryModal = ({ isOpen, type, country, onClose }: IProps) => {
   };
 
   const handleSubmit = (values: any) => {
-    if (country) onUpdateUser(values);
+    if (paymentType) onUpdateUser(values);
     else onAddUser(values);
   };
 
   useEffect(() => {
-    if (isOpen && country) {
+    if (isOpen && paymentType) {
       form.setFieldsValue((value: any) => ({
         ...value,
-        id: country?.id,
+        id: paymentType?.id,
       }));
     }
-  }, [isOpen, country]);
+  }, [isOpen, paymentType]);
 
   const handleClose = (change?: boolean) => {
     form.resetFields();
@@ -83,13 +83,13 @@ const CountryModal = ({ isOpen, type, country, onClose }: IProps) => {
     <Modal
       visible={isOpen}
       destroyOnClose
-      title={t(`country.${type}_country`)}
+      title={t(`payment_type.${type}_payment_type`)}
       onCancel={() => handleClose()}
       onOk={form.submit}
       footer={
         <ModalFooterActions
           again={{
-            text: t("common.country"),
+            text: t("common.payment_type"),
             type: EAgainType.Un,
           }}
           type={type}
@@ -103,7 +103,7 @@ const CountryModal = ({ isOpen, type, country, onClose }: IProps) => {
     >
       <Form
         form={form}
-        name="country-ref"
+        name="payment_type-ref"
         labelCol={{
           span: 6,
         }}
@@ -162,4 +162,4 @@ const CountryModal = ({ isOpen, type, country, onClose }: IProps) => {
   );
 };
 
-export default CountryModal;
+export default PaymentTypeModal;

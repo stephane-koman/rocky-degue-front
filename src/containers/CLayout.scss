@@ -319,3 +319,15 @@
   border-top: 1px solid #f0f0f0;
 }
 
+.ant-menu-inline.ant-menu-root .ant-menu-item > .ant-menu-title-content,
+.ant-menu-inline.ant-menu-root
+  .ant-menu-submenu-title
+  > .ant-menu-title-content {
+  text-overflow: initial;
+}
+
+.ant-menu-sub {
+  li {
+    //padding-left: 20px !important;
+  }
+}

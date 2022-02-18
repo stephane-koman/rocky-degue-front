@@ -1,6 +1,6 @@
 import { TFunction } from "i18next";
 import React from "react";
-import { CITY_PERMISSIONS, COUNTRY_PERMISSIONS, PERMISSION_PERMISSIONS, ROLE_PERMISSIONS, USER_PERMISSIONS } from "./utils/helpers/permissionHelpers";
+import { CITY_PERMISSIONS, COUNTRY_PERMISSIONS, CUSTOMER_PERMISSIONS, PAYMENT_TYPE_PERMISSIONS, PERMISSION_PERMISSIONS, ROLE_PERMISSIONS, USER_PERMISSIONS } from "./utils/helpers/permissionHelpers";
 
 const Dashboard = React.lazy(() => import('./pages/dashborad/Dashboard'));
 //const NotFound = React.lazy(() => import("./pages/not-found/NotFound"));
@@ -9,6 +9,8 @@ const Role = React.lazy(() => import("./pages/role/Role"));
 const Permission = React.lazy(() => import("./pages/permission/Permission"));
 const Country = React.lazy(() => import("./pages/country/Country"));
 const City = React.lazy(() => import("./pages/city/City"));
+const Customer = React.lazy(() => import("./pages/customer/Customer"));
+const PaymentType = React.lazy(() => import("./pages/payment-type/PaymentType"));
 
 const routes = (t: TFunction) => [
   {
@@ -22,6 +24,13 @@ const routes = (t: TFunction) => [
     name: t("menu.dashboard"),
     breadcrumbName: t("menu.dashboard"),
     component: Dashboard,
+  },
+  {
+    path: "/customers",
+    name: t("menu.customers"),
+    breadcrumbName: t("menu.customers"),
+    component: Customer,
+    permissions: CUSTOMER_PERMISSIONS,
   },
   {
     path: "/settings",
@@ -65,6 +74,13 @@ const routes = (t: TFunction) => [
     breadcrumbName: t("menu.cities"),
     component: City,
     permissions: CITY_PERMISSIONS,
+  },
+  {
+    path: "/settings/payment-types",
+    name: t("menu.payment_types"),
+    breadcrumbName: t("menu.payment_types"),
+    component: PaymentType,
+    permissions: PAYMENT_TYPE_PERMISSIONS,
   },
 ];
 

@@ -44,14 +44,14 @@ axiosApiInstance.interceptors.response.use(
       error?.response?.status === 401 &&
       error?.response?.data?.code === "TOKEN_EXPIRED"
     ) {
-      changeTokenInLocalStorage(error, true);
+      return changeTokenInLocalStorage(error, true);
     }
 
     if (
       error?.response?.status === 400 &&
       error?.response?.data?.code === "TOKEN_BLACKLISTED"
     ) {
-      changeTokenInLocalStorage(error);
+      return changeTokenInLocalStorage(error);
     }
 
     return Promise.reject(error);

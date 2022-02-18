@@ -111,7 +111,7 @@ export const RoleModal = ({ isOpen, type, role, permissions, onClose }: IProps) 
       visible={isOpen}
       destroyOnClose
       width={1000}
-      title={role ? t("role.update_role") : t("role.add_role")}
+      title={t(`role.${type}_role`)}
       onCancel={() => handleClose()}
       onOk={form.submit}
       footer={

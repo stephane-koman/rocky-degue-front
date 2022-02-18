@@ -2,7 +2,6 @@ import { Button, Checkbox, Divider, Input, Menu, Radio } from "antd";
 import SubMenu from "antd/lib/menu/SubMenu";
 import { Link } from "react-router-dom";
 import { getUserPermissions } from "./authHelpers";
-import { TFunction } from "i18next";
 import {
   ColumnFilterItem,
   FilterDropdownProps,

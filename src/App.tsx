@@ -11,6 +11,7 @@ import frFR from "antd/lib/locale/fr_FR";
 import enUS from "antd/lib/locale/en_US";
 import { ConfigProvider } from "antd";
 import { useTranslation } from "react-i18next";
+import "./App.scss";
 
 function App() {
   const { i18n } = useTranslation();
