@@ -185,7 +185,6 @@ export const CityModal = ({ isOpen, type, city, countries, onClose }: IProps) =>
             >
               <Select
                 disabled={type === EActionType.Show}
-                showSearch
                 allowClear
                 placeholder={t("country.select_country")}
                 onChange={onCountryChange}
