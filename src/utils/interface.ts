@@ -9,7 +9,7 @@ export interface IUser extends IDefault {
   email: string;
   role: IRole;
   permissions: IPermission[];
-};
+}
 
 export interface IRole extends IDefault {
   description: string;
@@ -37,7 +37,7 @@ export interface ICustomer extends IDefault {
   address: string;
   description?: string;
   country: ICountry;
-};
+}
 
 export interface IPagination {
   currentPage: number;

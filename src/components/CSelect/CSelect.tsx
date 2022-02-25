@@ -1,5 +1,4 @@
 import { Select, SelectProps } from "antd";
-import React, { ReactNode } from "react";
 
 const { Option } = Select;
 
